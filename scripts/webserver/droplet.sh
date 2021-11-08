@@ -134,9 +134,9 @@ EOF
 
 # Print public key
 echo "Root public SSH key: "
-cat "${STARTING_PATH}/.ssh/id_ed.pub"
+cat "${HOME}/.ssh/id_ed.pub"
 echo -e "\n${USERNAME} public SSH key: "
-cat "/home/${USERNAME}/.ssh/id_ed.pub"
+cat "${HOME_DIRECTORY}/.ssh/id_ed.pub"
 
 echo -e "\n--------------------------------\n"
 echo -e "\nAdd SSH to github."
