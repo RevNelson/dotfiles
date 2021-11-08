@@ -34,7 +34,7 @@ echo -e "\n#############################################"
 echo "Performing webserver specific provisioning..."
 echo -e "#############################################\n"
 
-$DOTBASE=$HOME_DIRECTORY/.dotfiles
+DOTBASE=$HOME_DIRECTORY/.dotfiles
 
 # Make usertype.sh
 USERTYPE_PATH=$DOTBASE/usertype.sh
@@ -120,11 +120,12 @@ echo -e "\n################################"
 echo "Webserver provisioning complete!"
 echo -e "################################\n"
 
-sudo -i -u someuser bash <<EOF
+sudo -i -u $USERNAME bash <<EOF
 echo "Password set!"
 EOF
 
-sudo -i -u someuser bash <<EOF
+sudo -i -u $USERNAME bash <<EOF
+. $DOTBASE/install
 chsh -s $(which zsh)
 zsh
 EOF

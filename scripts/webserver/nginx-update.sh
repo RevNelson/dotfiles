@@ -20,7 +20,7 @@ FILENAME=$(basename "$0" .sh)
 run_as_root $FILENAME
 
 # Load utils (run_as_root, cmd_exists, apt_)
-. $DOTBASE/.dotfiles/functions/utils.sh
+. $DOTBASE/functions/utils.sh
 
 NGINX_CONF=/etc/nginx/nginx.conf
 NGINX_CONF_TEMPLATE="$NGINX_UPDATE_ABSOLUTE_PATH/nginx.conf"
