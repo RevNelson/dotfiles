@@ -60,7 +60,7 @@ while getopts 'hp:d:l:u:m:' flag; do
     esac
 done
 
-[[ -z "$PROJECT_PATH" ]] && error "No project_path specified."
+[[ -z "$PROJECT_PATH" ]] && error "No project_path specified. Use -h for more information."
 
 # Check DB data
 db_error() {

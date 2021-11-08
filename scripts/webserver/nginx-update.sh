@@ -45,7 +45,6 @@ cp $NGINX_CONF_TEMPLATE $NGINX_CONF
 
 # Add dynamic config
 sed -i "s/worker_processes.*/worker_processes ${CPU_COUNT};/" $NGINX_CONF
-sed -i "s/worker_cpu_affinity.*/worker_cpu_affinity ${CPU_COUNT};/" $NGINX_CONF
 sed -i "s/^user .*/user ${USERNAME};/" $NGINX_CONF
 
 echo "Nginx configured for user: ${USERNAME}"

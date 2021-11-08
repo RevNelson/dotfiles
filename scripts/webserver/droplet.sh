@@ -129,6 +129,9 @@ echo -e "################################\n"
 
 sudo -i -u $USERNAME bash <<EOF
 . $DOTBASE/install
+EOF
+
+sudo -i -u $USERNAME bash <<EOF
 zsh
 EOF
 

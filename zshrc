@@ -48,7 +48,7 @@ autoload -U cmd_exists
 if cmd_exists starship; then
     eval "$(starship init zsh)"
 else
-    sh -c "$(curl -fsSL https://starship.rs/install.sh)" -y
+    sh <(curl -fsSL https://starship.rs/install.sh) -y >/dev/null
 fi
 
 #########
