@@ -1,6 +1,6 @@
 #!/bin/bash
 
-SCRIPT_ABSOLUTE_PATH="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+WEBSERVER_DROPLET_ABSOLUTE_PATH="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 STARTING_PATH=$PWD
 
 ####################
@@ -28,20 +28,16 @@ export HOME_DIRECTORY="/home/${USERNAME}"
 # Initialize generic droplet #
 ##############################
 
-. $SCRIPT_ABSOLUTE_PATH/../generic-droplet-provision.sh ${USERNAME} ${SSH_PORT}
+. $WEBSERVER_DROPLET_ABSOLUTE_PATH/../generic-droplet-provision.sh ${USERNAME} ${SSH_PORT}
 
 echo -e "\n#############################################"
 echo "Performing webserver specific provisioning..."
 echo -e "#############################################\n"
 
-# Make usertype.sh
-USERTYPE_ROOT_PATH=$HOME/.dotfiles/usertype.sh
-cat >${USERTYPE_ROOT_PATH} <<EOF
-export USERTYPE="webserver"
-EOF
+$DOTBASE=$HOME_DIRECTORY/.dotfiles
 
 # Make usertype.sh
-USERTYPE_PATH=$HOME_DIRECTORY/.dotfiles/usertype.sh
+USERTYPE_PATH=$DOTBASE/usertype.sh
 cat >${USERTYPE_PATH} <<EOF
 export USERTYPE="webserver"
 EOF
@@ -77,7 +73,7 @@ sed -i "/\[mysql\]/a ${SSL_CA}" $CONFIG_PATH
 #################
 
 echo "Installing Nginx..."
-. $SCRIPT_ABSOLUTE_PATH/nginx-update.sh
+. $DOTBASE/scripts/webserver/nginx-update.sh
 
 ###############
 # Install PHP #
@@ -96,19 +92,19 @@ apt_quiet install php-mysql php-curl php-gd php-intl php-mbstring php-soap php-x
 # Install Wordpress #
 #####################
 
-read -p "Would you like to install wordpress projects? " INSTALL_WP
+# read -p "Would you like to install wordpress projects? " INSTALL_WP
 
-while said_yes $INSTALL_WP; do
-    echo -e "\n#########################"
-    echo "Installing Wordpress..."
-    echo -e "#########################\n"
+# while said_yes $INSTALL_WP; do
+#     echo -e "\n#########################"
+#     echo "Installing Wordpress..."
+#     echo -e "#########################\n"
 
-    read -p What is
+#     read -p What is
 
-    ${SCRIPT_ABSOLUTE_PATH}/wp-install.sh
-    read -p "Would you like to install another wordpress project? " INSTALL_WP
+#     ${WEBSERVER_DROPLET_ABSOLUTE_PATH}/wp-install.sh
+#     read -p "Would you like to install another wordpress project? " INSTALL_WP
 
-done
+# done
 
 # Performing final package updates
 apt_quiet update && apt_quiet upgrade -y
@@ -119,15 +115,15 @@ echo -e "################################\n"
 
 # Print public key
 echo "Root public SSH key: "
-cat "/${STARTING_PATH}/.ssh/id_ed.pub"
+cat "${STARTING_PATH}/.ssh/id_ed.pub"
 echo -e "\n${USERNAME} public SSH key: "
 cat "/home/${USERNAME}/.ssh/id_ed.pub"
 
 echo -e "\n--------------------------------\n"
 echo -e "\nAdd SSH to github."
 echo -e "\nRun wp-install.sh for each wordpress project."
-echo -e "\nRun certbot for each domain."
-echo -e "sudo certbot --nginx -d example.com -d www.example.com\n"
+# Show help for wp-install
+$DOTBASE/scripts/webserver/wp-install.sh -h
 
 # TODO Setup droplet to use DO Spaces
 # TODO - Add NGINX blocks

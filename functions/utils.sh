@@ -1,4 +1,4 @@
-SCRIPT_ABSOLUTE_PATH="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+UTILS_ABSOLUTE_PATH="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 cmd_exists() {
     command -v $1 >/dev/null 2>&1
@@ -16,7 +16,7 @@ apt_quiet() {
 }
 
 # Load colors
-. $SCRIPT_ABSOLUTE_PATH/colors.sh
+. $UTILS_ABSOLUTE_PATH/colors.sh
 
 error() {
     if [ $# -gt 1 ]; then
@@ -40,4 +40,5 @@ run_as_root() {
         SCRIPT=$1
     fi
     [ $EUID != "0" ] && error "$SCRIPT must be run as root."
+    return 0
 }

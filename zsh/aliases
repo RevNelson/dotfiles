@@ -10,13 +10,13 @@ alias shell='source ~/.zshrc'
 alias home='cd ~/'
 
 # Get usertype
-. ../usertype.sh
+. $HOME/.dotfiles/usertype.sh
 
 if [ "$USERTYPE" = "webserver" ]; then
-    alias wp-install='sudo ~/.dotfiles/webserver/wp-install.sh'
-    alias nginx-update='sudo ~/.dotfiles/webserver/nginx-update.sh'
-    alias nginx-add-block='sudo ~/.dotfiles/webserver/nginx-add-block.sh'
-    alias wp-update-salts='sudo ~/.dotfiles/webserver/wp-update-salts.sh'
+    alias wp-install='sudo ~/.dotfiles/scripts/webserver/wp-install.sh'
+    alias nginx-update='sudo ~/.dotfiles/scripts/webserver/nginx-update.sh'
+    alias nginx-add-block='sudo ~/.dotfiles/scripts/webserver/nginx-add-block.sh'
+    alias wp-update-salts='sudo ~/.dotfiles/scripts/webserver/wp-update-salts.sh'
 fi
 
 if cmd_exists brew; then
