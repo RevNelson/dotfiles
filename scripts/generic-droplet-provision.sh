@@ -13,8 +13,11 @@ USERNAME=$1
     exit 1
 }
 
+USER_PASSWORD=$2
+[[ -z ${USER_PASSWORD} ]] && { SSH_PORT=22; }
+
 # Port to set SSH to use. Will default to 22 if not given
-SSH_PORT=$2
+SSH_PORT=$3
 
 [[ -z ${SSH_PORT} ]] && { SSH_PORT=22; }
 

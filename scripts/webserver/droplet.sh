@@ -8,19 +8,21 @@ STARTING_PATH=$PWD
 ####################
 
 read -p "Username: " USERNAME
-read -s "$USERNAME's Password: " USER_PASSWORD
-read -p "SSH Port (Press Enter for 22): " SSH_PORT
-read -p "Private Database Server IP: " DATABASE_IP
-
-# Check for all required arguments
 [[ -z ${USERNAME} ]] && {
     echo "Must provide a username for the main user of this droplet with privileges."
     exit 1
 }
+
+echo "Password for $USERNAME: "
+read -s USER_PASSWORD
 [[ -z ${USER_PASSWORD} ]] && {
     echo "Must provide a password for $USERNAME."
     exit 1
 }
+
+read -p "SSH Port (Press Enter for 22): " SSH_PORT
+
+read -p "Private Database Server IP: " DATABASE_IP
 [[ -z ${DATABASE_IP} ]] && {
     echo "Must provide the private IP of the database server droplet."
     exit 1
