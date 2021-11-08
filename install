@@ -1,0 +1,45 @@
+#!/usr/bin/env bash
+
+set -e
+
+##########
+# DOTBOT #
+##########
+
+CONFIG="install.conf.yaml"
+DOTBOT_DIR="dotbot"
+
+DOTBOT_BIN="bin/dotbot"
+BASEDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+cd "${BASEDIR}"
+git -C "${DOTBOT_DIR}" submodule sync --quiet --recursive
+git submodule update --init --recursive "${DOTBOT_DIR}"
+
+"${BASEDIR}/${DOTBOT_DIR}/${DOTBOT_BIN}" -d "${BASEDIR}" -c "${CONFIG}" "${@}"
+
+########
+# USER #
+########
+
+# Move dotfiles
+DOTBASE="$HOME/.dotfiles"
+if [ $DOTBASE != "$BASEDIR" ]; then
+    if [ -d "$HOME/.dotfiles" ]; then
+        echo "${HOME}/.dotfiles exists. Please handle and run installer again."
+        exit 1
+    else
+        mv BASEDIR $HOME/.dotfiles
+    fi
+fi
+
+# Make scripts executable
+chmod +x $DOTBASE/scripts
+
+OS="$(uname -s)"
+
+if [ "$OS" = "Linux" ]; then
+    . $DOTBASE/scripts/provision-linux.sh
+elif [ "$OS" = "Darwin" ]; then
+    . $DOTBASE/scripts/provision-macos.sh
+fi

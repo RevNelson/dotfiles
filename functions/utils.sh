@@ -1,0 +1,41 @@
+cmd_exists() {
+    command -v $1 >/dev/null 2>&1
+}
+
+said_yes() {
+    case "$1" in
+    [Yy][Ee][Ss] | [Yy]) return 0 ;;
+    *) return 1 ;;
+    esac
+}
+
+apt_quiet() {
+    apt-get "$@" >/dev/null
+}
+
+# Load colors
+. ./colors.sh
+
+error() {
+    if [ $# -gt 1 ]; then
+        FILENAME=$1
+        shift
+        echo -e $(red "$FILENAME: $*") >&2
+    else
+        echo -e $(red "$1") >&2
+    fi
+    exit 1
+}
+
+okay() {
+    echo "$(green $1)"
+}
+
+run_as_root() {
+    if [ -z $1 ]; then
+        SCRIPT='Script'
+    else
+        SCRIPT=$1
+    fi
+    [ $(id -g) != "0" ] && error "$SCRIPT must be run as root."
+}

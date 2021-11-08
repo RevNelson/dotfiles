@@ -1,0 +1,41 @@
+alias dc=docker-compose
+alias edit='nano'
+
+# Dot files
+alias ez='edit ~/.dotfiles/zshrc'
+alias ea='edit ~/.dotfiles/zsh/aliases'
+alias ep='edit ~/.dotfiles/zsh/path'
+alias shell='source ~/.zshrc'
+
+alias home='cd ~/'
+
+# Get usertype
+. ../usertype.sh
+
+if [ "$USERTYPE" = "webserver" ]; then
+    alias wp-install='sudo ~/.dotfiles/webserver/wp-install.sh'
+    alias nginx-update='sudo ~/.dotfiles/webserver/nginx-update.sh'
+    alias nginx-add-block='sudo ~/.dotfiles/webserver/nginx-add-block.sh'
+    alias wp-update-salts='sudo ~/.dotfiles/webserver/wp-update-salts.sh'
+fi
+
+if cmd_exists brew; then
+    alias b=brew
+fi
+
+# ls tings
+if cmd_exists colorls; then
+    alias ls='colorls'
+elif cmd_exists gls; then
+    alias ls='gls -GpF --color=auto'
+else
+    alias ls='ls -GpF'
+fi
+alias la='ls -A'
+alias ll='ls -l'
+alias lala='ls -la'
+alias l='ls'
+
+alias getip="curl icanhazip.com"
+
+alias apt='sudo apt'

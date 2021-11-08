@@ -1,0 +1,5 @@
+- clean: ["~"]
+
+- link:
+    ~/.zshrc: zshrc
+    ~/.config/starship.toml: starship.toml

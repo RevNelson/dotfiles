@@ -1,0 +1,19 @@
+path=(
+    /usr/local/bin
+    /usr/bin
+    /bin
+    /usr/local/sbin
+    /usr/sbin
+    /opt/local/bin
+    /local/java/jdk/bin
+    /opt/homebrew/bin
+    $HOME/.local/bin
+    $HOME/bin
+    $HOME/.yarn/bin
+    $HOME/.pyenv/bin
+    $HOME/Install
+    $HOME/global
+    $HOME/packages
+    $HOME/Library/Python/3.8/bin
+    $HOME/.pyenv/bin
+)
