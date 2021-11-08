@@ -109,9 +109,25 @@ apt_quiet install php-mysql php-curl php-gd php-intl php-mbstring php-soap php-x
 # Performing final package updates
 apt_quiet update && apt_quiet upgrade -y
 
+# Remove local dotfiles folder
+LOCAL_DOTFILES=$HOME/.dotfiles
+NEW_DOTFILES=$HOME_DIRECTORY/.dotfiles
+if [ "$LOCAL_DOTFILES" != "$NEW_DOTFILES" ]; then
+    rm -rf $HOME/.dotfiles
+fi
+
 echo -e "\n################################"
 echo "Webserver provisioning complete!"
 echo -e "################################\n"
+
+sudo -i -u someuser bash <<EOF
+echo "Password set!"
+EOF
+
+sudo -i -u someuser bash <<EOF
+chsh -s $(which zsh)
+zsh
+EOF
 
 # Print public key
 echo "Root public SSH key: "

@@ -99,12 +99,6 @@ echo "SSH has been set to use port ${SSH_PORT}"
 cp -r /root/.dotfiles/ ${HOME_DIRECTORY}
 chown -R $USERNAME:$USERNAME $HOME_DIRECTORY/.dotfiles
 chmod +x $HOME_DIRECTORY/.dotfiles
-# Remove local dotfiles folder
-LOCAL_DOTFILES=$HOME/.dotfiles
-NEW_DOTFILES=$HOME_DIRECTORY/.dotfiles
-if [ "$LOCAL_DOTFILES" != "$NEW_DOTFILES" ]; then
-    rm -rf $HOME/.dotfiles
-fi
 
 echo "Performing initial package updates and installing zsh..."
 apt-get update >/dev/null && apt-get upgrade -y >/dev/null
