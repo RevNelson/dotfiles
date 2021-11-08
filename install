@@ -29,7 +29,7 @@ if [ $DOTBASE != "$BASEDIR" ]; then
         echo "${HOME}/.dotfiles exists. Please handle and run installer again."
         exit 1
     else
-        mv BASEDIR $HOME/.dotfiles
+        mv $BASEDIR $HOME/.dotfiles
     fi
 fi
 

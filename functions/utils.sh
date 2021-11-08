@@ -1,3 +1,5 @@
+SCRIPT_ABSOLUTE_PATH="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
 cmd_exists() {
     command -v $1 >/dev/null 2>&1
 }
@@ -14,7 +16,7 @@ apt_quiet() {
 }
 
 # Load colors
-. ./colors.sh
+. $SCRIPT_ABSOLUTE_PATH/colors.sh
 
 error() {
     if [ $# -gt 1 ]; then

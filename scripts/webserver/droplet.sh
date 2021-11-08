@@ -36,7 +36,7 @@ echo -e "#############################################\n"
 
 # Make usertype.sh
 USERTYPE_PATH=$HOME/.dotfiles/usertype.sh
-cat >${PWD} <<EOF
+cat >${USERTYPE_PATH} <<EOF
 export USERTYPE="webserver"
 EOF
 
