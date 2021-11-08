@@ -1,6 +1,5 @@
 #!/bin/bash
-
-SCRIPT_ABSOLUTE_PATH="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+NGINX_UPDATE_ABSOLUTE_PATH="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 # Check for USERNAME and set it if not found
 [[ -z "$USERNAME" ]] && USERNAME=${SUDO_USER:-$USER}
@@ -12,18 +11,21 @@ SCRIPT_ABSOLUTE_PATH="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # Functions #
 #############
 
+# Source function utils
+. $HOME_DIRECTORY/.dotfiles/functions/utils.sh
+
 # Make sure script is run as root.
 FILENAME=$(basename "$0" .sh)
 run_as_root FILENAME
 
 # Load utils (run_as_root, cmd_exists, apt_)
-$HOME_DIRECTORY/.dotfiles/functions/utils.sh
+. $HOME_DIRECTORY/.dotfiles/functions/utils.sh
 
 NGINX_CONF=/etc/nginx/nginx.conf
-NGINX_CONF_TEMPLATE="${SCRIPT_ABSOLUTE_PATH}/nginx.conf"
+NGINX_CONF_TEMPLATE="$NGINX_UPDATE_ABSOLUTE_PATH/nginx.conf"
 
 if [ ! cmd_exists nginx ]; then
-    apt-quiet install nginx-full certbot python3-certbot-nginx -y
+    apt_quiet install nginx-full certbot python3-certbot-nginx -y
     ufw allow "Nginx Full" >/dev/null
 
     # Backup Nginx config
@@ -33,7 +35,7 @@ if [ ! cmd_exists nginx ]; then
     fi
 fi
 
-apt-quiet update && apt-quiet upgrade -y
+apt_quiet update && apt_quiet upgrade -y
 
 CPU_COUNT="$(grep processor /proc/cpuinfo | wc -l)"
 

@@ -7,9 +7,9 @@ STARTING_PATH=$PWD
 # Script Variables #
 ####################
 
-read -p "Username " USERNAME
-read -p "SSH Port (Press Enter for 22) " SSH_PORT
-read -p "Private Database Server IP " DATABASE_IP
+read -p "Username: " USERNAME
+read -p "SSH Port (Press Enter for 22): " SSH_PORT
+read -p "Private Database Server IP: " DATABASE_IP
 
 # Check for all required arguments
 [[ -z ${USERNAME} ]] && {
