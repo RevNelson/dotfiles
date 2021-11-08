@@ -35,7 +35,13 @@ echo "Performing webserver specific provisioning..."
 echo -e "#############################################\n"
 
 # Make usertype.sh
-USERTYPE_PATH=$HOME/.dotfiles/usertype.sh
+USERTYPE_ROOT_PATH=$HOME/.dotfiles/usertype.sh
+cat >${USERTYPE_ROOT_PATH} <<EOF
+export USERTYPE="webserver"
+EOF
+
+# Make usertype.sh
+USERTYPE_PATH=$HOME_DIRECTORY/.dotfiles/usertype.sh
 cat >${USERTYPE_PATH} <<EOF
 export USERTYPE="webserver"
 EOF

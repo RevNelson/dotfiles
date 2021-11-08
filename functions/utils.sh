@@ -39,5 +39,5 @@ run_as_root() {
     else
         SCRIPT=$1
     fi
-    [ $(id -g) != "0" ] && error "$SCRIPT must be run as root."
+    [ $EUID != "0" ] && error "$SCRIPT must be run as root."
 }

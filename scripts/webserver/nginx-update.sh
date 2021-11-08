@@ -16,7 +16,7 @@ NGINX_UPDATE_ABSOLUTE_PATH="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 # Make sure script is run as root.
 FILENAME=$(basename "$0" .sh)
-run_as_root FILENAME
+run_as_root $FILENAME
 
 # Load utils (run_as_root, cmd_exists, apt_)
 . $HOME_DIRECTORY/.dotfiles/functions/utils.sh
@@ -24,7 +24,7 @@ run_as_root FILENAME
 NGINX_CONF=/etc/nginx/nginx.conf
 NGINX_CONF_TEMPLATE="$NGINX_UPDATE_ABSOLUTE_PATH/nginx.conf"
 
-if [ ! cmd_exists nginx ]; then
+if ! cmd_exists nginx; then
     apt_quiet install nginx-full certbot python3-certbot-nginx -y
     ufw allow "Nginx Full" >/dev/null
 

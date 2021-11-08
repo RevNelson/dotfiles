@@ -33,8 +33,9 @@ if [ $DOTBASE != "$BASEDIR" ]; then
     fi
 fi
 
-# Make scripts executable
-chmod +x $DOTBASE/scripts
+# Make scripts and functions executable
+chmod -R +x $DOTBASE/scripts
+chmod -R +x $DOTBASE/functions
 
 OS="$(uname -s)"
 
