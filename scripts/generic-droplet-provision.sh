@@ -38,8 +38,12 @@ echo -e "#######################\n"
 
 HOME_DIRECTORY="/home/${USERNAME}"
 
+echo "Performing initial package updates and installing zsh..."
+apt-get update >/dev/null && apt-get upgrade -y >/dev/null
+apt-get install zsh -y >/dev/null
+
 # Add sudo user and grant privileges
-useradd --create-home --shell "/bin/bash" --groups sudo $USERNAME
+useradd -m -p $USER_PASSWORD -s "/bin/zsh" --groups sudo $USERNAME
 
 # Check whether the root account has a real password set
 ENCRYPTED_ROOT_PW="$(grep root /etc/shadow | cut --delimiter=: --fields=2)"
@@ -54,9 +58,6 @@ else
     # can be set without providing a previous value
     passwd --delete $USERNAME >/dev/null
 fi
-
-# Expire the sudo user's password immediately to force a change
-chage --lastday 0 $USERNAME
 
 #######
 # SSH #
@@ -99,10 +100,6 @@ echo "SSH has been set to use port ${SSH_PORT}"
 cp -r /root/.dotfiles/ ${HOME_DIRECTORY}
 chown -R $USERNAME:$USERNAME $HOME_DIRECTORY/.dotfiles
 chmod +x $HOME_DIRECTORY/.dotfiles
-
-echo "Performing initial package updates and installing zsh..."
-apt-get update >/dev/null && apt-get upgrade -y >/dev/null
-apt-get install zsh -y >/dev/null
 
 echo "Forcing git to use SSH connections for Github..."
 # Force git to use SSH on github

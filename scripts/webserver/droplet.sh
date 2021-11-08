@@ -8,12 +8,17 @@ STARTING_PATH=$PWD
 ####################
 
 read -p "Username: " USERNAME
+read -s "$USERNAME's Password: " USER_PASSWORD
 read -p "SSH Port (Press Enter for 22): " SSH_PORT
 read -p "Private Database Server IP: " DATABASE_IP
 
 # Check for all required arguments
 [[ -z ${USERNAME} ]] && {
     echo "Must provide a username for the main user of this droplet with privileges."
+    exit 1
+}
+[[ -z ${USER_PASSWORD} ]] && {
+    echo "Must provide a password for $USERNAME."
     exit 1
 }
 [[ -z ${DATABASE_IP} ]] && {
@@ -28,7 +33,7 @@ export HOME_DIRECTORY="/home/${USERNAME}"
 # Initialize generic droplet #
 ##############################
 
-. $WEBSERVER_DROPLET_ABSOLUTE_PATH/../generic-droplet-provision.sh ${USERNAME} ${SSH_PORT}
+. $WEBSERVER_DROPLET_ABSOLUTE_PATH/../generic-droplet-provision.sh ${USERNAME} ${USER_PASSWORD} ${SSH_PORT}
 
 echo -e "\n#############################################"
 echo "Performing webserver specific provisioning..."
@@ -121,12 +126,7 @@ echo "Webserver provisioning complete!"
 echo -e "################################\n"
 
 sudo -i -u $USERNAME bash <<EOF
-echo "Password set!"
-EOF
-
-sudo -i -u $USERNAME bash <<EOF
 . $DOTBASE/install
-chsh -s $(which zsh)
 zsh
 EOF
 

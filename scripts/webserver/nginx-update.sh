@@ -27,7 +27,7 @@ NGINX_CONF_TEMPLATE="$NGINX_UPDATE_ABSOLUTE_PATH/nginx.conf"
 
 if ! cmd_exists nginx; then
     apt_quiet install nginx-full certbot python3-certbot-nginx -y
-    ufw allow "Nginx Full" >/dev/null >&2
+    ufw allow "Nginx Full" >/dev/null
 
     # Backup Nginx config
     NGINX_CONF_BACKUP=/etc/nginx/nginx_backup.conf
