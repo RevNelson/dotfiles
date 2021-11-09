@@ -105,19 +105,18 @@ echo "SSH has been set to use port ${SSH_PORT}"
 # Dotbase #
 ###########
 
-echo "Installing dotbase for $USERNAME"
-
 # Copy .dotfiles to new user folder, apply ownership, and make executable
 cp -r /root/.dotfiles/ ${HOME_DIRECTORY}
 chown -R $USERNAME:$USERNAME $HOME_DIRECTORY/.dotfiles
 chmod -R +x $HOME_DIRECTORY/.dotfiles
 
 # Prepare dotfiles for new user
-echo "Installing dotbase as $USERNAME"
+echo "Installing dotbase for $USERNAME"
 sudo -i -u $USERNAME bash <<EOF
 . ~/.dotbase/install
+zsh
 echo "Sourcing .zshrc ..."
-zsh source ~/.zshrc
+source ~/.zshrc
 EOF
 
 echo "Forcing git to use SSH connections for Github..."
