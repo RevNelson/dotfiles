@@ -117,9 +117,9 @@ chown -R $USERNAME:$USERNAME $HOME_DIRECTORY/.dotfiles
 chmod -R +x $HOME_DIRECTORY/.dotfiles
 
 # Prepare dotfiles for new user
-echo "Installing dotbase for $USERNAME"
+echo "Installing dotbase for $USERNAME..."
 sudo -i -u $USERNAME bash <<EOF
-$HOME_DIRECTORY/.dotfiles/install
+$HOME_DIRECTORY/.dotfiles/install >/dev/null
 zsh
 echo "Sourcing .zshrc ..."
 source $HOME_DIRECTORY/.zshrc >/dev/null

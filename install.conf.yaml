@@ -7,4 +7,5 @@
 
 - link:
     ~/.zshrc: zshrc
+    ~/.gitconfig: gitconfig
     ~/.config/starship.toml: starship.toml

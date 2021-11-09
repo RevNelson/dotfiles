@@ -103,13 +103,6 @@ apt_quiet install php-mysql php-curl php-gd php-intl php-mbstring php-soap php-x
 # Performing final package updates
 apt_quiet update && apt_quiet upgrade -y
 
-# Remove local dotfiles folder
-LOCAL_DOTFILES=$HOME/.dotfiles
-NEW_DOTFILES=$HOME_DIRECTORY/.dotfiles
-if [ "$LOCAL_DOTFILES" != "$NEW_DOTFILES" ]; then
-    rm -rf $HOME/.dotfiles
-fi
-
 echo -e "\n################################"
 echo "Webserver provisioning complete!"
 echo -e "################################\n"
@@ -127,4 +120,10 @@ echo -e "\nRun wp-install.sh for each wordpress project."
 # Show help for wp-install
 $DOTBASE/scripts/webserver/wp-install.sh -h
 
+# Remove local dotfiles folder
+LOCAL_DOTFILES=$HOME/.dotfiles
+NEW_DOTFILES=$HOME_DIRECTORY/.dotfiles
+if [ "$LOCAL_DOTFILES" != "$NEW_DOTFILES" ]; then
+    rm -rf $HOME/.dotfiles
+fi
 # TODO Setup droplet to use DO Spaces

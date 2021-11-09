@@ -1,0 +1,9 @@
+[core]
+	compression = 0
+[http]
+	postBuffer = 1048576000
+[user]
+	name = Michael Nelson
+	email = revnelson@gmail.com
+[pull]
+	rebase = false

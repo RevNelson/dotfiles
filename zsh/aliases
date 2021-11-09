@@ -11,7 +11,10 @@ alias dfu='cd ~/.dotfiles && git pull && chmod -R +x ~/.dotfiles'
 alias home='cd ~/'
 
 # Get usertype
-. $HOME/.dotfiles/usertype.sh
+USERTYPE_FILE=$HOME/.dotfiles/usertype.sh
+if [ -f $USERTYPE_FILE ]; then
+    . $USERTYPE_FILE
+fi
 
 if [ "$USERTYPE" = "webserver" ]; then
     alias wp-install='sudo ~/.dotfiles/scripts/webserver/wp-install.sh'
