@@ -45,9 +45,46 @@ echo "Performing initial package updates and installing zsh..."
 apt-get update >/dev/null && apt-get upgrade -y >/dev/null
 apt-get install zsh -y >/dev/null
 
+# Generate SSH key for root user
+HOST=$(cat /etc/hostname)
+ROOT_SSH_KEY="/root/.ssh/id_ed"
+if [ ! -f $ROOT_SSH_KEY ]; then
+    ssh-keygen -t ed25519 -N "" -C "root@${HOST}" -f $ROOT_SSH_KEY >/dev/null
+fi
+
 # Add sudo user and grant privileges
 if ! id -u "$USERNAME" >/dev/null 2>&1; then
     useradd -m -p $USER_PASSWORD -s "/bin/zsh" --groups sudo $USERNAME
+
+    #######
+    # SSH #
+    #######
+
+    # Create SSH directory for new user
+    mkdir -p $HOME_DIRECTORY/.ssh
+
+    # Generate SSH key for new user
+    ssh-keygen -t ed25519 -N "" -C "${USERNAME}@${HOST}" -f "${HOME_DIRECTORY}/.ssh/id_ed" >/dev/null
+
+    # Copy `authorized_keys` file from root if requested
+    if [ "${COPY_AUTHORIZED_KEYS_FROM_ROOT}" = true ]; then
+        cp /root/.ssh/authorized_keys $HOME_DIRECTORY/.ssh
+    fi
+
+    # Add additional provided public keys
+    for PUB_KEY in "${OTHER_PUBLIC_KEYS_TO_ADD[@]}"; do
+        echo "${PUB_KEY}" >>"${HOME_DIRECTORY}/.ssh/authorized_keys"
+    done
+
+    # Adjust SSH configuration ownership and permissions
+    chmod 0700 "${HOME_DIRECTORY}/.ssh"
+    chmod 0600 "${HOME_DIRECTORY}/.ssh/authorized_keys"
+    chown -R "${USERNAME}:${USERNAME}" "${HOME_DIRECTORY}/.ssh"
+
+    # Add exception for SSH and then enable UFW firewall
+    ufw allow ${SSH_PORT}/tcp >/dev/null
+    ufw --force enable >/dev/null
+
 fi
 
 # Check whether the root account has a real password set
@@ -64,40 +101,9 @@ else
     passwd --delete $USERNAME >/dev/null
 fi
 
-#######
-# SSH #
-#######
-
-# Create SSH directory for sudo user
-mkdir -p $HOME_DIRECTORY/.ssh
-
-# Generate SSH key for root and new user
-HOST=$(cat /etc/hostname)
-ssh-keygen -t ed25519 -N "" -C "root@${HOST}" -f "/root/.ssh/id_ed" >/dev/null
-ssh-keygen -t ed25519 -N "" -C "${USERNAME}@${HOST}" -f "${HOME_DIRECTORY}/.ssh/id_ed" >/dev/null
-
-# Copy `authorized_keys` file from root if requested
-if [ "${COPY_AUTHORIZED_KEYS_FROM_ROOT}" = true ]; then
-    cp /root/.ssh/authorized_keys $HOME_DIRECTORY/.ssh
-fi
-
-# Add additional provided public keys
-for PUB_KEY in "${OTHER_PUBLIC_KEYS_TO_ADD[@]}"; do
-    echo "${PUB_KEY}" >>"${HOME_DIRECTORY}/.ssh/authorized_keys"
-done
-
-# Adjust SSH configuration ownership and permissions
-chmod 0700 "${HOME_DIRECTORY}/.ssh"
-chmod 0600 "${HOME_DIRECTORY}/.ssh/authorized_keys"
-chown -R "${USERNAME}:${USERNAME}" "${HOME_DIRECTORY}/.ssh"
-
 # Change SSH port
 sed -i "/^#Port/a Port ${SSH_PORT}" /etc/ssh/sshd_config
 service ssh restart
-
-# Add exception for SSH and then enable UFW firewall
-ufw allow ${SSH_PORT}/tcp >/dev/null
-ufw --force enable >/dev/null
 
 echo "SSH has been set to use port ${SSH_PORT}"
 
@@ -113,10 +119,11 @@ chmod -R +x $HOME_DIRECTORY/.dotfiles
 # Prepare dotfiles for new user
 echo "Installing dotbase for $USERNAME"
 sudo -i -u $USERNAME bash <<EOF
-. ~/.dotbase/install
+$HOME_DIRECTORY/.dotfiles/install
 zsh
 echo "Sourcing .zshrc ..."
-source ~/.zshrc
+source $HOME_DIRECTORY/.zshrc >/dev/null
+source $HOME_DIRECTORY/.zshrc >/dev/null
 EOF
 
 echo "Forcing git to use SSH connections for Github..."

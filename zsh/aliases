@@ -19,6 +19,7 @@ if [ "$USERTYPE" = "webserver" ]; then
     alias nginx-add-block='sudo ~/.dotfiles/scripts/webserver/nginx-add-block.sh'
     alias wp-update-salts='sudo ~/.dotfiles/scripts/webserver/wp-update-salts.sh'
     alias php-update-overrides='sudo ~/.dotfiles/scripts/webserver/php-update-overrides.sh'
+    alias mariadb-update='sudo ~/.dotfiles/scripts/webserver/mariadb-client.sh'
 fi
 
 if cmd_exists brew; then

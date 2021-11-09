@@ -57,23 +57,7 @@ echo "${DATABASE_IP} database-server" >>/etc/hosts
 ###################
 
 echo "Installing MariaDB Client..."
-apt_quiet install wget software-properties-common -y
-wget -q https://downloads.mariadb.com/MariaDB/mariadb_repo_setup
-# TODO - Add check for successful download
-chmod +x mariadb_repo_setup
-./mariadb_repo_setup --mariadb-server-version="mariadb-10.6" >/dev/null 2>&1
-apt_quiet update && apt_quiet install mariadb-client -y
-rm mariadb_repo_setup
-
-# Seed client config file for SSL
-SSL_CA="ssl-ca=/etc/mysql/ssl/cacert.pem"
-SSL_CERT="ssl-cert=/etc/mysql/ssl/client-cert.pem"
-SSL_KEY="ssl-key=/etc/mysql/ssl/client-key.pem"
-CONFIG_PATH="/etc/mysql/mariadb.conf.d/50-mysql-clients.cnf"
-
-sed -i "/\[mysql\]/a ${SSL_KEY}" $CONFIG_PATH
-sed -i "/\[mysql\]/a ${SSL_CERT}" $CONFIG_PATH
-sed -i "/\[mysql\]/a ${SSL_CA}" $CONFIG_PATH
+. $DOTBASE/scripts/webserver/mariadb-client.sh
 
 #################
 # Install Nginx #

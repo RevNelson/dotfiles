@@ -11,8 +11,8 @@
 FILENAME=$(basename "$0" .sh)
 run_as_root $FILENAME
 
-USER_PHP_FILE=$DOTBASE/scripts/webserver/php.ini
-USER_PHP_DESTINATION=/etc/php/8.0/cli/conf.d/99-webserver-overrides.ini
+USER_PHP_FILE="$DOTBASE/scripts/webserver/php.ini"
+USER_PHP_DESTINATION="/etc/php/8.0/cli/conf.d/99-webserver-overrides.ini"
 
 if [ -f $USER_PHP_FILE ]; then
     cp $USER_PHP_FILE $USER_PHP_DESTINATION
