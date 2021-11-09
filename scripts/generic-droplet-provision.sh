@@ -46,7 +46,9 @@ apt-get update >/dev/null && apt-get upgrade -y >/dev/null
 apt-get install zsh -y >/dev/null
 
 # Add sudo user and grant privileges
-useradd -m -p $USER_PASSWORD -s "/bin/zsh" --groups sudo $USERNAME
+if ! id -u "$USERNAME" >/dev/null 2>&1; then
+    useradd -m -p $USER_PASSWORD -s "/bin/zsh" --groups sudo $USERNAME
+fi
 
 # Check whether the root account has a real password set
 ENCRYPTED_ROOT_PW="$(grep root /etc/shadow | cut --delimiter=: --fields=2)"
@@ -108,11 +110,13 @@ echo "Installing dotbase for $USERNAME"
 # Copy .dotfiles to new user folder, apply ownership, and make executable
 cp -r /root/.dotfiles/ ${HOME_DIRECTORY}
 chown -R $USERNAME:$USERNAME $HOME_DIRECTORY/.dotfiles
-chmod +x $HOME_DIRECTORY/.dotfiles
+chmod -R +x $HOME_DIRECTORY/.dotfiles
 
 # Prepare dotfiles for new user
+echo "Installing dotbase as $USERNAME"
 sudo -i -u $USERNAME bash <<EOF
 . ~/.dotbase/install
+echo "Sourcing .zshrc ..."
 zsh source ~/.zshrc
 EOF
 
