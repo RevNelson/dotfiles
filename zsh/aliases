@@ -22,13 +22,13 @@ if [ "$USERTYPE" = "webserver" ]; then
     alias nginx-update='sudo ~/.dotfiles/scripts/webserver/nginx-update.sh'
     alias nginx-add-block='sudo ~/.dotfiles/scripts/webserver/nginx-add-block.sh'
     alias php-update-overrides='sudo ~/.dotfiles/scripts/webserver/php-update-overrides.sh'
-    alias mariadb-update='sudo ~/.dotfiles/scripts/webserver/mariadb-client.sh'
+    alias db-update='sudo ~/.dotfiles/scripts/webserver/mariadb-client.sh'
 fi
 
 if [ "$USERTYPE" = "database-server" ]; then
-    alias ssl-update='sudo ~/.dotfiles/scripts/mariadb/server-ssl-generate.sh'
-    alias ssl-copy='sudo ~/.dotfiles/scripts/mariadb/ssl-copy.sh'
-    alias mariadb-update='sudo ~/.dotfiles/scripts/mariadb/mariadb-server.sh'
+    alias ssl-update='sudo ~/.dotfiles/scripts/database/server-ssl-generate.sh'
+    alias ssl-copy='sudo ~/.dotfiles/scripts/database/ssl-copy.sh'
+    alias db-update='sudo ~/.dotfiles/scripts/database/mariadb-server.sh'
 fi
 
 if cmd_exists brew; then

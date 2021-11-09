@@ -13,7 +13,7 @@ if [ $EUID = "0" ]; then
             . $DOTBASE/scripts/webserver/droplet.sh
         elif [ "$DROPLET_TYPE" = "database" ]; then
             ERR="false"
-            echo "Provision Database Droplet!"
+            . $DOTBASE/scripts/database/droplet.sh
         elif [ "$DROPLET_TYPE" = "devserver" ]; then
             ERR="false"
             echo "Provision Devserver Droplet!"

@@ -78,7 +78,7 @@ echo "${WEBSERVER_IP} webserver" >>/etc/hosts
 ###################
 
 echo "Installing MariaDB Client..."
-. $DOTBASE/scripts/mariadb/mariadb-server.sh
+. $DOTBASE/scripts/database/mariadb-server.sh
 
 #########################################
 # Provision backup user with encryption #
@@ -126,7 +126,7 @@ echo -e "\nAdd SSH to github."
 echo -e "\nRun ssl-copy.sh to place SSL certificates on clients."
 
 # Show help for ssl-copy
-$DOTBASE/scripts/mariadb/ssl-copy.sh -h
+$DOTBASE/scripts/database/ssl-copy.sh -h
 
 # TODO Add connections to dev server
 # TODO Setup droplet to use DO Spaces

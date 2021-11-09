@@ -39,7 +39,7 @@ if ! cmd_exists mysql; then
 fi
 
 # Seed server config file for SSL
-SSL_CONF_FILE="$DOTBASE/scripts/webserver/mariadb-server.cnf"
+SSL_CONF_FILE="$DOTBASE/scripts/database/mariadb-server.cnf"
 SSL_CONF_DESTINATION="/etc/mysql/mariadb.conf.d/99-server-ssl.cnf"
 
 if [ -f $SSL_CONF_FILE ]; then
