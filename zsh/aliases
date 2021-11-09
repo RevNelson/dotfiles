@@ -6,7 +6,7 @@ alias ez='edit ~/.dotfiles/zshrc'
 alias ea='edit ~/.dotfiles/zsh/aliases'
 alias ep='edit ~/.dotfiles/zsh/path'
 alias shell='source ~/.zshrc'
-alias dfu='cd ~/.dotfiles && git pull'
+alias dfu='cd ~/.dotfiles && git pull && chmod -R +x functions && chmod -R +x scripts'
 
 alias home='cd ~/'
 

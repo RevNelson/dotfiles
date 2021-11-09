@@ -99,10 +99,22 @@ ufw --force enable >/dev/null
 
 echo "SSH has been set to use port ${SSH_PORT}"
 
+###########
+# Dotbase #
+###########
+
+echo "Installing dotbase for $USERNAME"
+
 # Copy .dotfiles to new user folder, apply ownership, and make executable
 cp -r /root/.dotfiles/ ${HOME_DIRECTORY}
 chown -R $USERNAME:$USERNAME $HOME_DIRECTORY/.dotfiles
 chmod +x $HOME_DIRECTORY/.dotfiles
+
+# Prepare dotfiles for new user
+sudo -i -u $USERNAME bash <<EOF
+. ~/.dotbase/install
+zsh source ~/.zshrc
+EOF
 
 echo "Forcing git to use SSH connections for Github..."
 # Force git to use SSH on github

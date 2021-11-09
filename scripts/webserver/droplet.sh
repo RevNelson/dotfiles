@@ -130,12 +130,7 @@ echo -e "\n################################"
 echo "Webserver provisioning complete!"
 echo -e "################################\n"
 
-sudo -i -u $USERNAME bash <<EOF
-. $DOTBASE/install
-zsh source ~/.zshrc
-EOF
-
-# Print public key
+# Print public keys
 echo "Root public SSH key: "
 cat "${HOME}/.ssh/id_ed.pub"
 echo -e "\n${USERNAME} public SSH key: "
@@ -144,8 +139,8 @@ cat "${HOME_DIRECTORY}/.ssh/id_ed.pub"
 echo -e "\n--------------------------------\n"
 echo -e "\nAdd SSH to github."
 echo -e "\nRun wp-install.sh for each wordpress project."
+
 # Show help for wp-install
 $DOTBASE/scripts/webserver/wp-install.sh -h
 
 # TODO Setup droplet to use DO Spaces
-# TODO - Add NGINX blocks
