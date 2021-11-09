@@ -80,7 +80,7 @@ server {
     access_log ${LOGS_PATH}/access.log;
     error_log ${LOGS_PATH}/error.log;
 
-    root        ${PULIC_PATH};
+    root        ${PUBLIC_PATH};
 
     index index.html index.htm index.php index.nginx-debian.html;
 
@@ -89,7 +89,7 @@ server {
 
     }
     location ~ \.php$ {
-        try_files $uri =404;
+#        try_files $uri =404;
         fastcgi_split_path_info ^(.+\.php)(/.+)$;
         fastcgi_pass unix:/run/php/php8.0-fpm.sock;
         fastcgi_index index.php;
@@ -102,7 +102,7 @@ server {
 EOF
 
 # Secure domain with SSL
-certbot --noninteractive --nginx --redirect --agree-tos -m "$(git config --global user.email)" -d $DOMAIN
+certbot --noninteractive --nginx --redirect --agree-tos -m "$(sudo -u $USERNAME git config --global user.email)" -d $DOMAIN
 
 # Changing permissions
 chown -R $NGINX_USER:$NGINX_USER $PUBLIC_PATH

@@ -95,6 +95,9 @@ systemctl restart php8.0-fpm
 # Install PHP extensions for WP
 apt_quiet install php-mysql php-curl php-gd php-intl php-mbstring php-soap php-xml php-xmlrpc php-zip -y
 
+# Add webserver PHP settings overrides
+. $DOTBASE/scripts/webserver/php-update-overrides.sh
+
 #####################
 # Install Wordpress #
 #####################
