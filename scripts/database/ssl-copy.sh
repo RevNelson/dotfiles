@@ -4,6 +4,14 @@ FILENAME=$(basename "$0" .sh)
 
 # Check for USERNAME and set it if not found
 [[ -z "$USERNAME" ]] && USERNAME=${SUDO_USER:-$USER}
+[[ -z "$DOTBASE" ]] && DOTBASE=$HOME_DIRECTORY/.dotfiles
+
+if [ -f $DOTBASE/usertype.sh ]; then
+    . $DOTBASE/usertype.sh
+fi
+
+# Source function utils
+. $DOTBASE/functions/utils.sh
 
 usage_info() {
     BLNK=$(echo "$FILENAME" | sed 's/./ /g')
@@ -27,9 +35,9 @@ error() {
 help() {
     usage_info
     echo
-    echo "  {-u} server-user         -- Set user for connecting to server (default: ${USERNAME}"
-    echo "  {-p} server-port         -- Set port for SSH connection (default: ${SSH_SERVER_PORT})"
-    echo "  {-i} server-ip           -- Set server ip for where to copy certificates (default: webserver)"
+    echo "  {-u} server-user         -- Set user for connecting to server (default: ${USERNAME})"
+    echo "  {-p} server-port         -- Set port for SSH connection (default: ${SSH_PORT})"
+    echo "  {-i} server-ip           -- Set server ip for where to copy certificates (e.g. webserver, devserver, 192.169.0.30)"
     echo "  {-d} destination-dir     -- Set user for chmod on public folder (default: /tmp/certs)"
     exit 0
 }
@@ -53,7 +61,7 @@ done
 
 # Check for all required arguments
 [[ -z ${SERVER_USER} ]] && {
-    echo "No port provided. Defaulting to port $USERNAME."
+    echo "No user provided. Defaulting to user $USERNAME."
     SERVER_USER=$USERNAME
 }
 [[ -z ${SERVER_PORT} ]] && {

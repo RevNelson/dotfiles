@@ -9,7 +9,7 @@ SSL_GENERATE_ABSOLUTE_PATH="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # Functions #
 #############
 
-# Load utils (error, okay, run_as_root)
+# Source function utils
 . $HOME_DIRECTORY/.dotfiles/functions/utils.sh
 
 mkdir $HOME_DIRECTORY/certs && cd $HOME_DIRECTORY/certs

@@ -19,7 +19,7 @@ NGINX_UPDATE_ABSOLUTE_PATH="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 FILENAME=$(basename "$0" .sh)
 run_as_root $FILENAME
 
-# Load utils (run_as_root, cmd_exists, apt_)
+# Source function utils
 . $DOTBASE/functions/utils.sh
 
 NGINX_CONF=/etc/nginx/nginx.conf

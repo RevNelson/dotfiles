@@ -12,7 +12,7 @@ SCRIPT_ABSOLUTE_PATH="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # Functions #
 #############
 
-# Load utils (error, okay, run_as_root)
+# Source function utils
 . $HOME_DIRECTORY/.dotfiles/functions/utils.sh
 
 # Make sure script is run as root.
