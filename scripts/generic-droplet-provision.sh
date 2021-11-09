@@ -123,9 +123,4 @@ $HOME_DIRECTORY/.dotfiles/install >/dev/null
 zsh
 echo "Sourcing .zshrc ..."
 source $HOME_DIRECTORY/.zshrc >/dev/null
-source $HOME_DIRECTORY/.zshrc >/dev/null
 EOF
-
-echo "Forcing git to use SSH connections for Github..."
-# Force git to use SSH on github
-git config --global url."git@github.com:".insteadOf "https://github.com/"
