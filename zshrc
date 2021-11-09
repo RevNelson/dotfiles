@@ -267,5 +267,5 @@ if cmd_exists pyenv; then
 fi
 
 if [ -f $DOTBASE/usertype.sh ]; then
-    . $DOTBASE/usertype.s
+    . $DOTBASE/usertype.sh
 fi
