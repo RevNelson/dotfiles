@@ -6,12 +6,14 @@
 
 FILENAME=$(basename "$0" .sh)
 
-USERNAME=${SUDO_USER:-$USER}
+[[ -z "$USERNAME" ]] && USERNAME=${SUDO_USER:-$USER}
 
 usage_info() {
     BLNK=$(echo "$FILENAME" | sed 's/./ /g')
     echo "Usage: $FILENAME [{-d} domain] [{-r} root_dir] \\"
     echo "       $BLNK [{-l} logs_path] [{-u} user] \\"
+    echo -e "\n        e.g. $(magenta sudo ./$FILENAME -d api.${USERNAME}.com -r ${USERNAME}/api/wp/public -u $USERNAME)"
+
 }
 
 usage() {

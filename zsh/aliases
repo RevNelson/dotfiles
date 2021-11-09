@@ -18,11 +18,17 @@ fi
 
 if [ "$USERTYPE" = "webserver" ]; then
     alias wp-install='sudo ~/.dotfiles/scripts/webserver/wp-install.sh'
+    alias wp-update-salts='sudo ~/.dotfiles/scripts/webserver/wp-update-salts.sh'
     alias nginx-update='sudo ~/.dotfiles/scripts/webserver/nginx-update.sh'
     alias nginx-add-block='sudo ~/.dotfiles/scripts/webserver/nginx-add-block.sh'
-    alias wp-update-salts='sudo ~/.dotfiles/scripts/webserver/wp-update-salts.sh'
     alias php-update-overrides='sudo ~/.dotfiles/scripts/webserver/php-update-overrides.sh'
     alias mariadb-update='sudo ~/.dotfiles/scripts/webserver/mariadb-client.sh'
+fi
+
+if [ "$USERTYPE" = "database-server" ]; then
+    alias ssl-update='sudo ~/.dotfiles/scripts/mariadb/server-ssl-generate.sh'
+    alias ssl-copy='sudo ~/.dotfiles/scripts/mariadb/ssl-copy.sh'
+    alias mariadb-update='sudo ~/.dotfiles/scripts/mariadb/mariadb-server.sh'
 fi
 
 if cmd_exists brew; then

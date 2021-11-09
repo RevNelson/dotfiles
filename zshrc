@@ -265,3 +265,7 @@ if cmd_exists pyenv; then
     eval "$(pyenv init --path)"
     eval "$(pyenv init -)"
 fi
+
+if [ -f $DOTBASE/usertype.sh ]; then
+    . $DOTBASE/usertype.s
+fi

@@ -47,6 +47,7 @@ DOTBASE=$HOME_DIRECTORY/.dotfiles
 USERTYPE_PATH=$DOTBASE/usertype.sh
 cat >${USERTYPE_PATH} <<EOF
 export USERTYPE="webserver"
+export SSH_PORT=${SSH_PORT}
 EOF
 
 # Add database server to hosts file
@@ -82,26 +83,10 @@ apt_quiet install php-mysql php-curl php-gd php-intl php-mbstring php-soap php-x
 # Add webserver PHP settings overrides
 . $DOTBASE/scripts/webserver/php-update-overrides.sh
 
-#####################
-# Install Wordpress #
-#####################
-
-# read -p "Would you like to install wordpress projects? " INSTALL_WP
-
-# while said_yes $INSTALL_WP; do
-#     echo -e "\n#########################"
-#     echo "Installing Wordpress..."
-#     echo -e "#########################\n"
-
-#     read -p What is
-
-#     ${WEBSERVER_DROPLET_ABSOLUTE_PATH}/wp-install.sh
-#     read -p "Would you like to install another wordpress project? " INSTALL_WP
-
-# done
-
 # Performing final package updates
 apt_quiet update && apt_quiet upgrade -y
+
+su - $USERNAME
 
 echo -e "\n################################"
 echo "Webserver provisioning complete!"
@@ -109,7 +94,7 @@ echo -e "################################\n"
 
 # Print public keys
 echo "Root public SSH key: "
-cat "${HOME}/.ssh/id_ed.pub"
+cat "/root/.ssh/id_ed.pub"
 echo -e "\n${USERNAME} public SSH key: "
 cat "${HOME_DIRECTORY}/.ssh/id_ed.pub"
 
@@ -120,10 +105,4 @@ echo -e "\nRun wp-install.sh for each wordpress project."
 # Show help for wp-install
 $DOTBASE/scripts/webserver/wp-install.sh -h
 
-# Remove local dotfiles folder
-LOCAL_DOTFILES=$HOME/.dotfiles
-NEW_DOTFILES=$HOME_DIRECTORY/.dotfiles
-if [ "$LOCAL_DOTFILES" != "$NEW_DOTFILES" ]; then
-    rm -rf $HOME/.dotfiles
-fi
 # TODO Setup droplet to use DO Spaces
