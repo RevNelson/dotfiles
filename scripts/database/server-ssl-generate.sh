@@ -27,6 +27,9 @@ openssl req -newkey rsa:2048 -days 3650 -nodes -keyout client-key.pem -out clien
 openssl rsa -in client-key.pem -out client-key.pem
 openssl x509 -req -in client-req.pem -days 3650 -CA cacert.pem -CAkey ca-key.pem -set_serial 01 -out client-cert.pem
 
+# Set certs folder to mysql ownership
+chown -R mysql:mysql $CERTS_DESTINATION
+
 # Restart mysql to apply new certificates
 systemctl restart mysql
 

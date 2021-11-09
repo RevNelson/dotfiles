@@ -8,8 +8,8 @@
 [[ -z "$DOTBASE" ]] && DOTBASE=$HOME_DIRECTORY/.dotfiles
 
 # Set MariaDB bind address if given
-if [ -z "$1" ]; then
-    [[ -z "$PRIVATE_IP" ]] && PRIVATE_IP=0.0.0.0
+if [ $# -lt 1 ]; then
+    [[ -z "$PRIVATE_IP" ]] && PRIVATE_IP="0.0.0.0"
 else
     PRIVATE_IP=$1
 fi

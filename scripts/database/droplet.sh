@@ -85,8 +85,8 @@ echo "Installing MariaDB Client..."
 #########################################
 
 # Add backup user in mysql
-mysql -e "GRANT SELECT, TRIGGER, EVENT, SHOW VIEW ON *.* TO 'mdbbackup'@'localhost' IDENTIFIED BY ${DB_BACKUP_USER_PASS}"
-mysql -e "FLUSH PRIVILEGES"
+mysql -e "GRANT SELECT, TRIGGER, EVENT, SHOW VIEW ON *.* TO 'mdbbackup'@'localhost' IDENTIFIED BY '${DB_BACKUP_USER_PASS}';"
+mysql -e "FLUSH PRIVILEGES;"
 
 # Create backup.cnf
 cat >/etc/mysql/mariadb.conf.d/backup.cnf <<EOF
@@ -104,7 +104,7 @@ openssl req -x509 -passin pass:$ENCRYPTION_PASS -nodes -key /etc/mysql/mdbbackup
 # Generate SSL certs for MariaDB #
 ##################################
 
-. ./server-ssl.sh
+. $DOTBASE/scripts/database/server-ssl-generate.sh
 
 # Performing final package updates
 apt_quiet update && apt_quiet upgrade -y
