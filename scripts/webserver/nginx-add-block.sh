@@ -10,9 +10,8 @@ FILENAME=$(basename "$0" .sh)
 
 usage_info() {
     BLNK=$(echo "$FILENAME" | sed 's/./ /g')
-    echo "Usage: $FILENAME [{-d} domain] [{-r} root_dir] \\"
-    echo "       $BLNK [{-l} logs_path] [{-u} user] \\"
-    echo -e "\n        e.g. $(magenta sudo ./$FILENAME -d api.${USERNAME}.com -r ${USERNAME}/api/wp/public -u $USERNAME)"
+    echo "Usage: $FILENAME [{-d} domain] [{-r} root_dir] [{-l} logs_path]"
+    echo -e "\n        e.g. $(magenta sudo ./$FILENAME -d api.${USERNAME}.com -r ${USERNAME}/api/wp/public)"
 
 }
 
@@ -33,20 +32,18 @@ help() {
     echo "  {-d} domain         -- Set fully qualified domain"
     echo "  {-r} root           -- Set root of public path (default: pwd)"
     echo "  {-l} logs_path      -- Set logs path (default: root_path/../)"
-    echo "  {-u} nginx_user     -- Set user for chmod on public folder (default: ${USERNAME})"
     exit 0
 }
 
-while getopts 'hd:l:r:u:' flag; do
+while getopts 'hd:r:l:' flag; do
     case "${flag}" in
     h)
         help
         exit 1
         ;;
     d) DOMAIN="${OPTARG}" ;;
-    l) LOGS_PATH="${OPTARG}" ;;
     r) PUBLIC_PATH="${OPTARG}" ;;
-    u) NGINX_USER="${OPTARG}" ;;
+    l) LOGS_PATH="${OPTARG}" ;;
     *)
         usage_info
         exit 1
@@ -59,7 +56,6 @@ done
 [[ -z ${DOMAIN} ]] && error "No domain specified."
 [[ -z "$PUBLIC_PATH" ]] && PUBLIC_PATH=$PWD
 [[ -z "$LOGS_PATH" ]] && LOGS_PATH="$(dirname $PUBLIC_PATH)/logs"
-[[ -z "$NGINX_USER" ]] && NGINX_USER=$USERNAME
 
 # Functions
 ok() { echo -e '\e[32m'$1'\e[m'; } # Green
@@ -107,7 +103,7 @@ EOF
 certbot --noninteractive --nginx --redirect --agree-tos -m "$(sudo -u $USERNAME git config --global user.email)" -d $DOMAIN
 
 # Changing permissions
-chown -R $NGINX_USER:$NGINX_USER $PUBLIC_PATH
+chown -R www-data:www-data $PUBLIC_PATH
 
 # Enable site by creating symbolic link
 ln -s $NGINX_AVAILABLE/$DOMAIN $NGINX_ENABLED/$DOMAIN

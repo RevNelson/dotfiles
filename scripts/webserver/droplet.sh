@@ -83,6 +83,17 @@ apt_quiet install php-mysql php-curl php-gd php-intl php-mbstring php-soap php-x
 # Add webserver PHP settings overrides
 . $DOTBASE/scripts/webserver/php-update-overrides.sh
 
+##################
+# Install WP-Cli #
+##################
+
+cd /tmp
+curl -S -s -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
+chmod +x /tmp/wp-cli.phar
+mv /tmp/wp-cli.phar /usr/local/bin/wp
+mkdir -p /var/www/.wp-cli/cache
+chown -R www-data:www-data /var/www/.wp-cli/cache
+
 # Performing final package updates
 apt_quiet update && apt_quiet upgrade -y
 

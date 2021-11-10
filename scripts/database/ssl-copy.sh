@@ -76,23 +76,34 @@ done
     echo "Must provide the destination for the copy. e.g. webserver , devserver , 192.168.0.30"
     help
 }
-[[ -z ${DESTINATION_PATH} ]] && DESTINATION_PATH="/tmp/certs"
+[[ -z ${DESTINATION_PATH} ]] && DESTINATION_PATH="/etc/mysql/ssl"
 
 SSL_CA_PATH="/etc/mysql/ssl/cacert.pem"
-SSL_CERT_PATH="/etc/mysql/ssl/server-cert.pem"
-SSL_KEY_PATH="/etc/mysql/ssl/server-key.pem"
+SSL_CERT_PATH="/etc/mysql/ssl/client-cert.pem"
+SSL_KEY_PATH="/etc/mysql/ssl/client-key.pem"
 
 TEMP_PATH=/tmp/certs
 
+echo "Password for $SERVER_USER: "
+read -s SERVER_USER_PASSWORD
+
 # Make a writeable temp directory
-ssh ${SERVER_USER}@${DESTINATION_IP} -p $SERVER_PORT sudo mkdir -p $TEMP_PATH && sudo chmod 777 $TEMP_PATH
+ssh -tt ${SERVER_USER}@${DESTINATION_IP} -p $SERVER_PORT >/dev/null <<EOF
+    mkdir -p $TEMP_PATH
+    chmod 777 $TEMP_PATH
+    exit
+EOF
 
 # Move files to TEMP_PATH
-scp -P $SERVER_PORT $SSL_CA_PATH $SSL_CERT_PATH $SSL_KEY_PATH ${SERVER_USER}@${DESTINATION_IP}:${TEMP_PATH}
+scp -P $SERVER_PORT $SSL_CA_PATH $SSL_CERT_PATH $SSL_KEY_PATH ${SERVER_USER}@${DESTINATION_IP}:${TEMP_PATH} >/dev/null
 
 # Move certs to destination
-ssh ${SERVER_USER}@${DESTINATION_IP} -p $SERVER_PORT sudo mkdir -p $DESTINATION_PATH &&
-    sudo mv "${TEMP_PATH}/*.*" $DESTINATION_PATH
+ssh -tt ${SERVER_USER}@${DESTINATION_IP} -p $SERVER_PORT >/dev/null <<EOF
+    sudo -S <<< $SERVER_USER_PASSWORD mkdir -p $DESTINATION_PATH
+    sudo mv -f $TEMP_PATH/* $DESTINATION_PATH
+    sudo chown -R $SERVER_USER:$SERVER_USER $DESTINATION_PATH
+    rm -rf $TEMP_PATH
+    exit
+EOF
 
-# Remove TEMP_PATH
-ssh ${SERVER_USER}@${DESTINATION_IP} -p $SERVER_PORT sudo rm -rf $TEMP_PATH
+echo -e "\n$(green Finished copying certs to $DESTINATION_IP. Please verify on server.)\n"
