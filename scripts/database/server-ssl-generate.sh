@@ -12,7 +12,27 @@ SSL_GENERATE_ABSOLUTE_PATH="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # Source function utils
 . $HOME_DIRECTORY/.dotfiles/functions/utils.sh
 
-mkdir $HOME_DIRECTORY/certs && cd $HOME_DIRECTORY/certs
+while getopts 'f' flag; do
+    case "${flag}" in
+    f)
+        CONFIRMED="y"
+        ;;
+    esac
+done
+
+[[ -z "$CONFIRMED" ]] && {
+    echo -e "\nAre you sure you want to continue? All connections will be broken until you run $(magenta ssl-copy -i CLIENT_SERVER)."
+    echo "You can skip this check by providing the '-f' flag. i.e. ssl-update -f"
+    read -p "Please type 'yes' to confirm: " CONFIRMED
+    echo ""
+}
+
+if ! said_yes $CONFIRMED; then
+    echo -e "SSL generation cancelled. No changes will be made.\n"
+    exit 1
+fi
+
+mkdir -p $HOME_DIRECTORY/certs && cd $HOME_DIRECTORY/certs
 
 openssl genrsa 4096 >ca-key.pem
 openssl req -new -x509 -nodes -days 3650 -key ca-key.pem -out cacert.pem -subj "/C=US/ST=CA/L=LA/O=Dis/CN=MariaDB-admin"
@@ -33,6 +53,6 @@ chown -R mysql:mysql $CERTS_DESTINATION
 # Restart mysql to apply new certificates
 systemctl restart mysql
 
-echo "Certificates are installed. Run ssl-copy.sh to place SSL certificates on clients."
+echo -e "\n$(green Certificates are installed. Run ssl-copy.sh to place SSL certificates on clients.)\n"
 
 $SSL_GENERATE_ABSOLUTE_PATH/ssl-copy.sh -h

@@ -266,6 +266,18 @@ if cmd_exists pyenv; then
     eval "$(pyenv init -)"
 fi
 
+#####################
+# Droplet variables #
+#####################
+
 if [ -f $DOTBASE/usertype.sh ]; then
     . $DOTBASE/usertype.sh
+fi
+
+if [ -f $DOTBASE/ssh-port.sh ]; then
+    . $DOTBASE/ssh-port.sh
+fi
+
+if [ -f $DOTBASE/clients.sh ]; then
+    . $DOTBASE/clients.sh
 fi

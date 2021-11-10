@@ -35,6 +35,8 @@ read -p "Private Webserver Server IP: " WEBSERVER_IP
     exit 1
 }
 
+read -p "Private Devserver IP (optional): " DEVSERVER_IP
+
 echo "Password for MariaDB backup user: "
 read -s DB_BACKUP_USER_PASS
 [[ -z ${DB_BACKUP_USER_PASS} ]] && {
@@ -67,11 +69,28 @@ DOTBASE=$HOME_DIRECTORY/.dotfiles
 USERTYPE_PATH=$DOTBASE/usertype.sh
 cat >${USERTYPE_PATH} <<EOF
 export USERTYPE="database-server"
+EOF
+
+# Make ssh-port.sh
+SSH_PORT_PATH=$DOTBASE/ssh-port.sh
+cat >${SSH_PORT_PATH} <<EOF
 export SSH_PORT=${SSH_PORT}
+EOF
+
+# Make clients.sh
+CLIENTS_PATH=$DOTBASE/clients.sh
+cat >${CLIENTS_PATH} <<EOF
+export WEBSERVER_IP=${WEBSERVER_IP}
 EOF
 
 # Add webserver to hosts file
 echo "${WEBSERVER_IP} webserver" >>/etc/hosts
+
+# Add devserver to hosts and clients files if given
+[[ ! -z "$DEVSERVER_IP" ]] && {
+    echo "${DEVSERVER_IP} devserver" >>/etc/hosts
+    echo "export DEVSERVER_IP=${DEVSERVER_IP}" >>/etc/hosts
+}
 
 ###################
 # Install MariaDB #
@@ -104,7 +123,7 @@ openssl req -x509 -passin pass:$ENCRYPTION_PASS -nodes -key /etc/mysql/mdbbackup
 # Generate SSL certs for MariaDB #
 ##################################
 
-. $DOTBASE/scripts/database/server-ssl-generate.sh
+. $DOTBASE/scripts/database/server-ssl-generate.sh -f
 
 # Performing final package updates
 apt_quiet update && apt_quiet upgrade -y
@@ -128,7 +147,6 @@ echo -e "\nRun ssl-copy.sh to place SSL certificates on clients."
 # Show help for ssl-copy
 $DOTBASE/scripts/database/ssl-copy.sh -h
 
-# TODO Add connections to dev server
 # TODO Setup droplet to use DO Spaces
 # TODO Add cron job for adding encrypted backups to Spaces
 # TODO Import latest backup and restore databases
