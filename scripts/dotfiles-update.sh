@@ -59,6 +59,7 @@ if [ -z "$FORCE" ]; then
 else
     read -p "Are you sure you want to overwrite any local changes in ~/.dotfiles? [y/n] " REALLY_FORCE
     if said_yes $REALLY_FORCE; then
+        git clean -i -d -f .
         git fetch
         git reset --hard HEAD
         git merge '@{u}'
