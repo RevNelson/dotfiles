@@ -8,10 +8,12 @@ FILENAME=$(basename "$0" .sh)
 # Check for HOME_DIRECTORY and set it if not found
 [[ -z "$HOME_DIRECTORY" ]] && HOME_DIRECTORY=$(getent passwd ${SUDO_USER:-$USER} | cut -d: -f6)
 
+# Set DOTBASE
 [[ -z "$DOTBASE" ]] && DOTBASE=$HOME_DIRECTORY/.dotfiles
 
-if [ -f $DOTBASE/ssh-port.sh ]; then
-    . $DOTBASE/ssh-port.sh
+# Set SSH_PORT
+if [ -f $HOME_DIRECTORY/.config/ssh-port.sh ]; then
+    . $HOME_DIRECTORY/.config/ssh-port.sh
 fi
 
 # Source function utils

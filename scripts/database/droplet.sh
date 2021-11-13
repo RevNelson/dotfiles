@@ -3,6 +3,9 @@
 DATABASE_SCRIPT_ABSOLUTE_PATH="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 STARTING_PATH=$PWD
 
+# Source function utils
+. $DATABASE_SCRIPT_ABSOLUTE_PATH/../../functions/utils.sh
+
 ####################
 # Script Variables #
 ####################
@@ -53,6 +56,8 @@ read -s ENCRYPTION_PASS
 
 export HOME_DIRECTORY="/home/${USERNAME}"
 
+export USERTYPE="database-server"
+
 ##############################
 # Initialize generic droplet #
 ##############################
@@ -65,20 +70,8 @@ echo -e"###################################################\n"
 
 DOTBASE=$HOME_DIRECTORY/.dotfiles
 
-# Make usertype.sh
-USERTYPE_PATH=$DOTBASE/usertype.sh
-cat >${USERTYPE_PATH} <<EOF
-export USERTYPE="database-server"
-EOF
-
-# Make ssh-port.sh
-SSH_PORT_PATH=$DOTBASE/ssh-port.sh
-cat >${SSH_PORT_PATH} <<EOF
-export SSH_PORT=${SSH_PORT}
-EOF
-
 # Make clients.sh
-CLIENTS_PATH=$DOTBASE/clients.sh
+CLIENTS_PATH=$HOME_DIRECTORY/.config/clients.sh
 cat >${CLIENTS_PATH} <<EOF
 export WEBSERVER_IP=${WEBSERVER_IP}
 EOF
@@ -124,6 +117,12 @@ openssl req -x509 -passin pass:$ENCRYPTION_PASS -nodes -key /etc/mysql/mdbbackup
 ##################################
 
 . $DOTBASE/scripts/database/server-ssl-generate.sh -f
+
+#############
+# DO Spaces #
+#############
+
+. $DATABASE_SCRIPT_ABSOLUTE_PATH/s3cmd-install.sh
 
 # Performing final package updates
 apt_quiet update && apt_quiet upgrade -y
