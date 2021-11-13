@@ -46,7 +46,7 @@ help() {
     exit 0
 }
 
-while getopts 'hk:d:' flag; do
+while getopts 'hk:o:' flag; do
     case "${flag}" in
     k) KEY_PATH="${OPTARG}" ;;
     o) OUTPUT_PATH="${OPTARG}" ;;
