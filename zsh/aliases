@@ -7,7 +7,7 @@ alias ea='edit ~/.dotfiles/zsh/aliases'
 alias ep='edit ~/.dotfiles/zsh/path'
 alias shell='source ~/.zshrc'
 alias dfu='~/.dotfiles/scripts/dotfiles-update.sh'
-alias gaacm='git add * && git commit -m '
+alias gaacm='chmod -R +x ~/.dotfiles && git add * && git commit -m '
 
 alias home='cd ~/'
 
