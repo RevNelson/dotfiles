@@ -270,14 +270,18 @@ fi
 # Droplet variables #
 #####################
 
-if [ -f $DOTBASE/usertype.sh ]; then
-    . $DOTBASE/usertype.sh
+if [ -f ~/.config/usertype.sh ]; then
+    . ~/.config/usertype.sh
 fi
 
-if [ -f $DOTBASE/ssh-port.sh ]; then
-    . $DOTBASE/ssh-port.sh
+if [ -f ~/.config/ssh-port.sh ]; then
+    . ~/.config/ssh-port.sh
 fi
 
-if [ -f $DOTBASE/clients.sh ]; then
-    . $DOTBASE/clients.sh
+if [ -f ~/.config/clients.sh ]; then
+    . ~/.config/clients.sh
+fi
+
+if [ -f ~/.config/servers.sh ]; then
+    . ~/.config/servers.sh
 fi

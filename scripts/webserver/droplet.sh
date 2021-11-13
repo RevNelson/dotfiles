@@ -3,6 +3,9 @@
 WEBSERVER_DROPLET_ABSOLUTE_PATH="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 STARTING_PATH=$PWD
 
+# Source function utils
+. $WEBSERVER_DROPLET_ABSOLUTE_PATH/../../functions/utils.sh
+
 ####################
 # Script Variables #
 ####################
@@ -29,7 +32,15 @@ read -p "Private Database Server IP: " DATABASE_IP
 }
 [[ -z ${SSH_PORT} ]] && export SSH_PORT=22
 
+read -p "Is this a devserver? [y/n]: " IS_DEVSERVER
+
 export HOME_DIRECTORY="/home/${USERNAME}"
+
+if said_yes $IS_DEVSERVER; then
+    export USERTYPE="devserver"
+else
+    export USERTYPE="webserver"
+fi
 
 ##############################
 # Initialize generic droplet #
@@ -42,13 +53,6 @@ echo "Performing webserver specific provisioning..."
 echo -e "#############################################\n"
 
 DOTBASE=$HOME_DIRECTORY/.dotfiles
-
-# Make usertype.sh
-USERTYPE_PATH=$DOTBASE/usertype.sh
-cat >${USERTYPE_PATH} <<EOF
-export USERTYPE="webserver"
-export SSH_PORT=${SSH_PORT}
-EOF
 
 # Add database server to hosts file
 echo "${DATABASE_IP} database-server" >>/etc/hosts

@@ -24,7 +24,7 @@ usage_info() {
     echo "Usage: sudo $FILENAME [{-d} domain] [{-p} project_path] [{-l} logs_path]  \\"
     echo "       $BLNK [{-m} database_info] [{-c} cli-plugins]"
     echo -e "\n        e.g. $(magenta sudo ./$FILENAME -d api.${USERNAME}.com -p ${USERNAME}/api) \\"
-    echo "                 $(magenta -m db_user:db_pass:db_name:host:ssl -c updraftplus:wp-graphql)"
+    echo "                 $(magenta -m db_user:db_pass:db_name:host:ssl -c do-spaces-sync:wp-graphql:woocommerce:wp-graphql-woocommerce)"
 }
 
 help() {
@@ -35,7 +35,7 @@ help() {
     echo "  {-l} logs_path      -- Set logs path (default: project_path/wp/logs/) -- only used for Nginx block"
     echo "  {-m} database       -- Set database info as array - e.g. -m db_user:db_pass:db_name:host:ssl"
     echo "                         If no 5th element (ssl), SSL will not be set."
-    echo "  {-c} cli-plugins    -- Set plugin list as array - e.g. -c updraftplus:do-spaces-sync:wp-graphql:woocommerce:wp-graphql-woocommerce"
+    echo "  {-c} cli-plugins    -- Set plugin list as array - e.g. -c do-spaces-sync:wp-graphql:woocommerce:wp-graphql-woocommerce"
     exit 0
 }
 
@@ -142,6 +142,10 @@ if cmd_exists wp; then
             WPGRAPHQL_WOOCOMMERCE_VERSION="0.10.6"
             WPGRAPHQL_WOOCOMMERCE_URL="https://github.com/wp-graphql/wp-graphql-woocommerce/releases/download/v${WPGRAPHQL_WOOCOMMERCE_VERSION}/wp-graphql-woocommerce.zip"
             wp plugin install $WPGRAPHQL_WOOCOMMERCE_URL
+        elif [ "$PLUGIN" = 'wp-graphql-jwt' ]; then
+            WPGRAPHQL_JWT_VERSION="0.4.1"
+            WPGRAPHQL_JWT_URL="https://github.com/wp-graphql/wp-graphql-jwt-authentication/archive/refs/tags/v${WPGRAPHQL_JWT_VERSION}.zip"
+            wp plugin install $WPGRAPHQL_JWT_URL
         else
             wp plugin install $PLUGIN
         fi

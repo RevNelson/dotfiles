@@ -113,8 +113,9 @@ echo "SSH has been set to use port ${SSH_PORT}"
 
 # Copy .dotfiles to new user folder, apply ownership, and make executable
 cp -r /root/.dotfiles/ ${HOME_DIRECTORY}
-chown -R $USERNAME:$USERNAME $HOME_DIRECTORY/.dotfiles
-chmod -R +x $HOME_DIRECTORY/.dotfiles
+DOTBASE=$HOME_DIRECTORY/.dotfiles
+chown -R $USERNAME:$USERNAME $DOTBASE
+chmod -R +x $DOTBASE
 
 # Prepare dotfiles for new user
 echo "Installing dotbase for $USERNAME..."
@@ -123,4 +124,17 @@ $HOME_DIRECTORY/.dotfiles/install >/dev/null
 zsh
 echo "Sourcing .zshrc ..."
 source $HOME_DIRECTORY/.zshrc >/dev/null
+EOF
+
+[[ -z "$USERTYPE" ]] && read -p "What type of server is this (webserver, devserver, database-server)? " USERTYPE
+# Make usertype.sh
+USERTYPE_PATH=$HOME_DIRECTORY/.config/usertype.sh
+cat >${USERTYPE_PATH} <<EOF
+export USERTYPE=${USERTYPE}
+EOF
+
+# Make ssh-port.sh
+SSH_PORT_PATH=$HOME_DIRECTORY/.config/ssh-port.sh
+cat >${SSH_PORT_PATH} <<EOF
+export SSH_PORT=${SSH_PORT}
 EOF

@@ -1,6 +1,4 @@
 #!/bin/bash
-NGINX_ADD_BLOCK_ABSOLUTE_PATH="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-
 #
 # Nginx - new server block
 # Modified from: https://gist.github.com/0xAliRaza/327ec99fff803417c5d06ba609255b49
@@ -10,11 +8,9 @@ FILENAME=$(basename "$0" .sh)
 
 [[ -z "$USERNAME" ]] && USERNAME=${SUDO_USER:-$USER}
 
-BLOCK_TYPE="wp"
-
 usage_info() {
     BLNK=$(echo "$FILENAME" | sed 's/./ /g')
-    echo "Usage: $FILENAME [{-d} domain] [{-r} root_dir] [{-l} logs_path]"
+    echo "Usage: $FILENAME [{-d} domain] [{-r} root_dir] [{-l} logs_path] [{-f} file_path]"
     echo -e "\n        e.g. $(magenta sudo ./$FILENAME -d api.${USERNAME}.com -r ${USERNAME}/api/wp/public)"
 
 }
@@ -31,11 +27,11 @@ help() {
     echo "  {-d} domain         -- Set fully qualified domain"
     echo "  {-r} root           -- Set root of public path (default: pwd)"
     echo "  {-l} logs_path      -- Set logs path (default: root_path/../)"
-    echo "  {-t} block_type     -- Set block type (wp, static, pm2) (default: wp)"
+    echo "  {-f} file_path      -- Set file path (default: /etc/nginx/sites-available/DOMAIN)"
     exit 0
 }
 
-while getopts 'hd:r:l:t:' flag; do
+while getopts 'hd:r:l:' flag; do
     case "${flag}" in
     h)
         help
@@ -44,7 +40,7 @@ while getopts 'hd:r:l:t:' flag; do
     d) DOMAIN="${OPTARG}" ;;
     r) PUBLIC_PATH="${OPTARG}" ;;
     l) LOGS_PATH="${OPTARG}" ;;
-    t) BLOCK_TYPE="${OPTARG}" ;;
+    f) FILE_PATH="${OPTARG}" ;;
     *)
         usage_info
         exit 1
@@ -56,35 +52,40 @@ done
 [ $(id -g) != "0" ] && die "Script must be run as root."
 [[ -z ${DOMAIN} ]] && error $FILENAME "No domain specified."
 
-# Variables
+# Set default variables
 [[ -z "$PUBLIC_PATH" ]] && PUBLIC_PATH=$PWD
 [[ -z "$LOGS_PATH" ]] && LOGS_PATH="$(dirname $PUBLIC_PATH)/logs"
-NGINX_AVAILABLE='/etc/nginx/sites-available'
-NGINX_ENABLED='/etc/nginx/sites-enabled'
-
-# Make sure logs directory exists
-mkdir -p $LOGS_PATH
-
-# Changing permissions
-chown -R www-data:www-data $PUBLIC_PATH
+[[ -z "$NGINX_AVAILABLE" ]] && NGINX_AVAILABLE="/etc/nginx/sites-available"
+[[ -z "$FILE_PATH" ]] && FILE_PATH=$NGINX_AVAILABLE/$DOMAIN
 
 # Create nginx config file
+cat >$FILE_PATH <<EOF
 
-# WP Block
-if [ "$BLOCK_TYPE" = "wp"]; then
-    . $NGINX_ADD_BLOCK_ABSOLUTE_PATH/nginx-wp-block.sh
-fi
+server {
+    listen 80 http2;
 
-# Enable site by creating symbolic link
-ln -s $NGINX_AVAILABLE/$DOMAIN $NGINX_ENABLED/$DOMAIN
+    server_name ${DOMAIN};
 
-# Restart
-nginx -t
-service nginx restart
+    access_log ${LOGS_PATH}/access.log;
+    error_log ${LOGS_PATH}/error.log;
 
-# Secure domain with SSL
-certbot --noninteractive --nginx --redirect --agree-tos -m "$(sudo -u $USERNAME git config --global user.email)" -d $DOMAIN
+    root        ${PUBLIC_PATH};
 
-ok "Nginx block created for ${DOMAIN}, served from ${PUBLIC_PATH}"
+    index index.html index.htm index.php index.nginx-debian.html;
 
-# TODO - Check Nginx block for redirect using HTTP2
+    location / {
+        try_files $uri $uri/ /index.php?$args;
+
+    }
+    location ~ \.php$ {
+#        try_files $uri =404;
+        fastcgi_split_path_info ^(.+\.php)(/.+)$;
+        fastcgi_pass unix:/run/php/php8.0-fpm.sock;
+        fastcgi_index index.php;
+        include fastcgi_params;
+    }
+
+    # default-src 'self' https://*.google-analytics.com https://*.googleapis.com https://*.gstatic.com https://*.gravatar.com https://*.w.org data: 'unsafe-inline' 'unsafe-eval';
+
+}
+EOF
