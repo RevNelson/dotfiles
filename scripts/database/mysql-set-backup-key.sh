@@ -14,9 +14,8 @@ if [ -f $DOTBASE/usertype.sh ]; then
     . $DOTBASE/usertype.sh
 fi
 
-OUTPUT_DIR="${HOME_DIRECTORY}/backups"
-OUTPUT_PATH="${OUTPUT_DIR}/alldb_${date+\%Y-\%m-\%d}.sql.bz2.enc"
-KEY_PATH="/etc/mysql/mdbbackup-pub.key"
+KEY_PATH=$HOME_DIRECTORY/backup.key
+DESTINATION="/etc/mysql/mdbbackup-pub.key"
 
 # Source function utils
 . $DOTBASE/functions/utils.sh
@@ -27,8 +26,8 @@ run_as_root $FILENAME
 
 usage_info() {
     BLNK=$(echo "$FILENAME" | sed 's/./ /g')
-    echo "Usage: $FILENAME [{-k} public-key-path] [{-o} output-path] \\"
-    echo -e "\n        e.g. $(magenta sudo ./$FILENAME)"
+    echo "Usage: $FILENAME [{-k} private-key-path] [{-d} destination] \\"
+    echo -e "\n        e.g. $(magenta sudo ./$FILENAME) after placing private key at $KEY_PATH"
 
 }
 
@@ -41,15 +40,16 @@ usage() {
 help() {
     usage_info
     echo
-    echo "  {-k} public-key-path    -- Path to public key (default $KEY_PATH)"
-    echo "  {-o} output-path        -- Set path for output of backup (default $OUTPUT_PATH)"
+    echo "  {-k} private-key-path    -- Path to private key (default $KEY_PATH)"
+    echo "  {-d} destination         -- Set path to place public key (default $DESTINATION)"
+    echo -e "\n$(red Private key file will be removed after placing public key.)\n"
     exit 0
 }
 
 while getopts 'hk:d:' flag; do
     case "${flag}" in
     k) KEY_PATH="${OPTARG}" ;;
-    o) OUTPUT_PATH="${OPTARG}" ;;
+    d) DESTINATION="${OPTARG}" ;;
     h) help ;;
     *)
         usage_info
@@ -58,7 +58,14 @@ while getopts 'hk:d:' flag; do
     esac
 done
 
-# Dump all databases and directly zip and ecrypt the file.
-mysqldump --routines --triggers --events --quick --single-transaction \
-    --all-databases | bzip2 | openssl smime -encrypt -binary -text -aes256 \
-    -out ${OUTPUT_PATH} -outform DER ${KEY_PATH} && chmod 600 ${OUTPUT_PATH}
+if [ -f $KEY_PATH ]; then
+    if [ -z "$ENCRYPTION_PASS"]]; then
+        echo "Encryption password: "
+        read -s ENCRYPTION_PASS
+    fi
+    openssl req -x509 -passin pass:$ENCRYPTION_PASS -nodes -key $KEY_PATH -out $DESTINATION -subj "/C=US/ST=CA/L=LA/O=Dis/CN=MariaDB-backup"
+    rm $KEY_PATH
+else
+    echo "$(red No private key found.)"
+    help
+fi

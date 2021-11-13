@@ -1,11 +1,5 @@
 #!/bin/bash
 
-DATABASE_SCRIPT_ABSOLUTE_PATH="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-STARTING_PATH=$PWD
-
-# Source function utils
-. $DATABASE_SCRIPT_ABSOLUTE_PATH/../../functions/utils.sh
-
 ####################
 # Script Variables #
 ####################
@@ -62,13 +56,16 @@ export USERTYPE="database-server"
 # Initialize generic droplet #
 ##############################
 
-. $DATABASE_SCRIPT_ABSOLUTE_PATH/../generic-droplet-provision.sh ${USERNAME} ${USER_PASSWORD} ${SSH_PORT}
+. $DOTBASE/scripts/generic-droplet-provision.sh ${USERNAME} ${USER_PASSWORD} ${SSH_PORT}
 
 echo -e "\n###################################################"
 echo "Performing database server specific provisioning..."
 echo -e"###################################################\n"
 
 DOTBASE=$HOME_DIRECTORY/.dotfiles
+
+# Source function utils
+. $DOTBASE/functions/utils.sh
 
 # Make clients.sh
 CLIENTS_PATH=$HOME_DIRECTORY/.config/clients.sh
@@ -108,10 +105,18 @@ password = ${DB_BACKUP_USER_PASS}
 EOF
 chmod 600 /etc/mysql/mariadb.conf.d/backup.cnf
 
-# Generate and sign encryption certificate
-openssl genpkey -algorithm RSA -pass pass:$ENCRYPTION_PASS -out /etc/mysql/mdbbackup-priv.key -pkeyopt rsa_keygen_bits:4096 -aes256
-openssl req -x509 -passin pass:$ENCRYPTION_PASS -nodes -key /etc/mysql/mdbbackup-priv.key -out /etc/mysql/mdbbackup-pub.key -subj "/C=US/ST=CA/L=LA/O=Dis/CN=MariaDB-backup"
-
+DB_BACKUP_KEY="/root/backup.key"
+if ! -f $DB_BACKUP_KEY; then
+    echo "Do you want to generate a new encryption key for backups?"
+    read -p "If not, you will need to run $(green mysql-backup-key) after provisioning. [y/n] " NEW_BACKUP_KEY
+    if said_yes $NEW_BACKUP_KEY; then
+        # Generate and sign encryption certificate
+        openssl genpkey -algorithm RSA -pass pass:$ENCRYPTION_PASS -out $HOME_DIRECTORY/backup.key -pkeyopt rsa_keygen_bits:4096 -aes256
+        . $DOTBASE/scripts/database/mysql-set-backup-key.sh -k $DB_BACKUP_KEY
+    fi
+else
+    . $DOTBASE/scripts/database/mysql-set-backup-key.sh -k $DB_BACKUP_KEY
+fi
 ##################################
 # Generate SSL certs for MariaDB #
 ##################################
@@ -122,7 +127,7 @@ openssl req -x509 -passin pass:$ENCRYPTION_PASS -nodes -key /etc/mysql/mdbbackup
 # DO Spaces #
 #############
 
-. $DATABASE_SCRIPT_ABSOLUTE_PATH/s3cmd-install.sh
+. $DOTBASE/scripts/database/s3cmd-install.sh
 
 # Performing final package updates
 apt_quiet update && apt_quiet upgrade -y

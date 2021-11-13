@@ -35,11 +35,6 @@ usage() {
     exit 1
 }
 
-error() {
-    echo -e "$FILENAME: $*" >&2
-    exit 1
-}
-
 help() {
     usage_info
     echo

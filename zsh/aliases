@@ -6,7 +6,7 @@ alias ez='edit ~/.dotfiles/zshrc'
 alias ea='edit ~/.dotfiles/zsh/aliases'
 alias ep='edit ~/.dotfiles/zsh/path'
 alias shell='source ~/.zshrc'
-alias dfu='cd ~/.dotfiles && git pull && chmod -R +x ~/.dotfiles'
+alias dfu='~/.dotfiles/scripts/dotfiles-update'
 
 alias home='cd ~/'
 
@@ -31,6 +31,7 @@ if [ "$USERTYPE" = "database-server" ]; then
     alias ssl-copy='sudo ~/.dotfiles/scripts/database/ssl-copy.sh'
     alias db-update='sudo ~/.dotfiles/scripts/database/mariadb-server.sh'
     alias mysql-add-user='sudo ~/.dotfiles/scripts/database/mysql-add-user.sh -s'
+    alias mysql-set-backup-key='sudo ~/.dotfiles/scripts/database/mysql-set-backup-key.sh'
     alias s3cmd-update='sudo ~/.dotfiles/scripts/database/s3cmd-install.sh'
 fi
 
