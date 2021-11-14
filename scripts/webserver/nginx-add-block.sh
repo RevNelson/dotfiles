@@ -78,7 +78,7 @@ fi
 NGINX_WP_CONF=$NGINX_AVAILABLE/$DOMAIN
 if [ -f ${NGINX_WP_CONF} ]; then
     # Add http2 to nginx conf
-    sed -i "s/listen 443 ssl;/listen 443 ssl http2;/" $NGINX_WP_CONF
+    sed -i "s/listen 443;/listen 443 ssl http2;/" $NGINX_WP_CONF
     # Enable site by creating symbolic link
     ln -s $NGINX_WP_CONF $NGINX_ENABLED/$DOMAIN
 fi
@@ -88,7 +88,7 @@ nginx -t
 service nginx restart
 
 # Secure domain with SSL
-certbot --noninteractive --nginx --redirect --agree-tos -m "$(sudo -u $USERNAME git config --global user.email)" -d $DOMAIN
+certbot --noninteractive --nginx --no-redirect --agree-tos --no-eff-email -m "$(sudo -u $USERNAME git config --global user.email)" -d $DOMAIN
 
 ok "Nginx block created for ${DOMAIN}, served from ${PUBLIC_PATH}"
 
