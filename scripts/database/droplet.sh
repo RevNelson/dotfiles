@@ -79,7 +79,7 @@ echo "${WEBSERVER_IP} webserver" >>/etc/hosts
 # Add devserver to hosts and clients files if given
 [[ ! -z "$DEVSERVER_IP" ]] && {
     echo "${DEVSERVER_IP} devserver" >>/etc/hosts
-    echo "export DEVSERVER_IP=${DEVSERVER_IP}" >>/etc/hosts
+    echo "export DEVSERVER_IP=${DEVSERVER_IP}" >>$CLIENTS_PATH
 }
 
 ###################
