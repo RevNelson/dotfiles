@@ -71,8 +71,8 @@ chown -R www-data:www-data $PUBLIC_PATH
 # Create nginx config file
 
 # WP Block
-if [ "$BLOCK_TYPE" = "wp"]; then
-    . $NGINX_ADD_BLOCK_ABSOLUTE_PATH/nginx-wp-block.sh
+if [ "$BLOCK_TYPE" = "wp" ]; then
+    . $NGINX_ADD_BLOCK_ABSOLUTE_PATH/nginx-wp-block.sh -d $DOMAIN -r $PUBLIC_PATH -l $LOGS_PATH
 fi
 
 # Enable site by creating symbolic link
