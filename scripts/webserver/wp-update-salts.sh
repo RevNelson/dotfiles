@@ -8,7 +8,7 @@
 #
 #
 
-[[ -z HOME_DIRECTORY ]] && HOME_DIRECTORY=$(getent passwd ${SUDO_USER:-$USER} | cut -d: -f6)
+[[ -z ${HOME_DIRECTORY:-} ]] && HOME_DIRECTORY=$(getent passwd ${SUDO_USER:-$USER} | cut -d: -f6)
 
 cd $HOME_DIRECTORY
 

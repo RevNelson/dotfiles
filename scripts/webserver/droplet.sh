@@ -79,13 +79,14 @@ echo "Installing PHP..."
 apt_quiet install ca-certificates apt-transport-https software-properties-common -y
 add-apt-repository --yes ppa:ondrej/php >/dev/null
 apt_quiet update && apt_quiet install php8.0-fpm -y
-systemctl restart php8.0-fpm
 
 # Install PHP extensions for WP
-apt_quiet install php-mysql php-curl php-gd php-intl php-mbstring php-soap php-xml php-xmlrpc php-zip -y
+apt_quiet install php-mysql php-curl php-gd php-imagick php-intl php-mbstring php-soap php-xml php-xmlrpc php-zip -y
 
 # Add webserver PHP settings overrides
 . $DOTBASE/scripts/webserver/php-update-overrides.sh
+
+systemctl restart php8.0-fpm
 
 ##################
 # Install WP-Cli #
