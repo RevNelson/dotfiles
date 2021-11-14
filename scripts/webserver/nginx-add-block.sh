@@ -1,5 +1,4 @@
 #!/bin/bash
-NGINX_ADD_BLOCK_ABSOLUTE_PATH="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 #
 # Nginx - new server block
@@ -8,7 +7,22 @@ NGINX_ADD_BLOCK_ABSOLUTE_PATH="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 FILENAME=$(basename "$0" .sh)
 
+# Check for USERNAME and set it if not found
 [[ -z ${USERNAME:-} ]] && USERNAME=${SUDO_USER:-$USER}
+
+# Check for HOME_DIRECTORY and set it if not found
+[[ -z ${HOME_DIRECTORY:-} ]] && HOME_DIRECTORY=$(getent passwd ${SUDO_USER:-$USER} | cut -d: -f6)
+
+[[ -z ${DOTBASE:-} ]] && DOTBASE=$HOME_DIRECTORY/.dotfiles
+
+if [ -f $DOTBASE/usertype.sh ]; then
+    . $DOTBASE/usertype.sh
+fi
+
+KEY_PATH=$HOME_DIRECTORY/backups.key
+
+# Source function utils
+. $DOTBASE/functions/utils.sh
 
 BLOCK_TYPE="wp"
 
@@ -61,6 +75,7 @@ done
 [[ -z ${LOGS_PATH:-} ]] && LOGS_PATH="$(dirname $PUBLIC_PATH)/logs"
 NGINX_AVAILABLE='/etc/nginx/sites-available'
 NGINX_ENABLED='/etc/nginx/sites-enabled'
+NGINX_CONF=$NGINX_AVAILABLE/$DOMAIN
 
 # Make sure logs directory exists
 mkdir -p $LOGS_PATH
@@ -68,28 +83,36 @@ mkdir -p $LOGS_PATH
 # Changing permissions
 chown -R www-data:www-data $PUBLIC_PATH
 
-# Create nginx config file
+# Create basic nginx config file to pass certbot checks
+BLANK_BLOCK=$DOTBASE/scripts/webserver/nginx-block-80.conf
+cp $BLANK_BLOCK $NGINX_CONF
+
+sed -i "s/DOMAIN/${DOMAIN}/g" $NGINX_CONF
+sed -i "s|LOGS_PATH|${LOGS_PATH}|g" $NGINX_CONF
+sed -i "s|PUBLIC_PATH|${PUBLIC_PATH}|g" $NGINX_CONF
+
+# Secure domain with SSL
+certbot --noninteractive --nginx --no-redirect --agree-tos --no-eff-email -m "$(sudo -u $USERNAME git config --global user.email)" -d $DOMAIN
 
 # WP Block
 if [ "$BLOCK_TYPE" = "wp" ]; then
-    . $NGINX_ADD_BLOCK_ABSOLUTE_PATH/nginx-wp-block.sh -d $DOMAIN -r $PUBLIC_PATH -l $LOGS_PATH
+    SSL_BLOCK=$DOTBASE/scripts/webserver/nginx-wp-block-ssl.conf
 fi
 
-NGINX_WP_CONF=$NGINX_AVAILABLE/$DOMAIN
-if [ -f ${NGINX_WP_CONF} ]; then
-    # Add http2 to nginx conf
-    sed -i "s/listen 443;/listen 443 ssl http2;/" $NGINX_WP_CONF
+# Copy SSL block
+cp $SSL_BLOCK $NGINX_CONF
+
+sed -i "s/DOMAIN/${DOMAIN}/g" $NGINX_CONF
+sed -i "s|LOGS_PATH|${LOGS_PATH}|g" $NGINX_CONF
+sed -i "s|PUBLIC_PATH|${PUBLIC_PATH}|g" $NGINX_CONF
+
+if [ -f ${NGINX_CONF} ]; then
     # Enable site by creating symbolic link
-    ln -s $NGINX_WP_CONF $NGINX_ENABLED/$DOMAIN
+    ln -s $NGINX_CONF $NGINX_ENABLED/$DOMAIN
 fi
 
 # Restart
 nginx -t
 service nginx restart
 
-# Secure domain with SSL
-certbot --noninteractive --nginx --no-redirect --agree-tos --no-eff-email -m "$(sudo -u $USERNAME git config --global user.email)" -d $DOMAIN
-
 ok "Nginx block created for ${DOMAIN}, served from ${PUBLIC_PATH}"
-
-# TODO - Check Nginx block for redirect using HTTP2
