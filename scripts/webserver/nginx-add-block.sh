@@ -75,8 +75,13 @@ if [ "$BLOCK_TYPE" = "wp" ]; then
     . $NGINX_ADD_BLOCK_ABSOLUTE_PATH/nginx-wp-block.sh -d $DOMAIN -r $PUBLIC_PATH -l $LOGS_PATH
 fi
 
-# Enable site by creating symbolic link
-ln -s $NGINX_AVAILABLE/$DOMAIN $NGINX_ENABLED/$DOMAIN
+NGINX_WP_CONF=$NGINX_AVAILABLE/$DOMAIN
+if [ -f ${NGINX_WP_CONF} ]; then
+    # Add http2 to nginx conf
+    sed -i "s/listen 443 ssl;/listen 443 ssl http2;/" $NGINX_WP_CONF
+    # Enable site by creating symbolic link
+    ln -s $NGINX_WP_CONF $NGINX_ENABLED/$DOMAIN
+fi
 
 # Restart
 nginx -t

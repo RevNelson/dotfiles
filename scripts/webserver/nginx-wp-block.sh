@@ -62,7 +62,7 @@ done
 cat >$FILE_PATH <<EOF
 
 server {
-    listen 80 http2;
+    listen 80;
 
     server_name ${DOMAIN};
 

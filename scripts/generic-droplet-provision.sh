@@ -14,7 +14,10 @@ USERNAME=$1
 }
 
 USER_PASSWORD=$2
-[[ -z ${USER_PASSWORD} ]] && { SSH_PORT=22; }
+if [ -z ${USER_PASSWORD:-} ]; then
+    echo "Please enter a password for user $USERNAME: "
+    read -s $USER_PASSWORD
+fi
 
 # Port to set SSH to use. Will default to 22 if not given
 SSH_PORT=$3
