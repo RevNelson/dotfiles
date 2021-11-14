@@ -19,8 +19,6 @@ if [ -f $DOTBASE/usertype.sh ]; then
     . $DOTBASE/usertype.sh
 fi
 
-KEY_PATH=$HOME_DIRECTORY/backups.key
-
 # Source function utils
 . $DOTBASE/functions/utils.sh
 
@@ -115,4 +113,4 @@ fi
 nginx -t
 service nginx restart
 
-ok "Nginx block created for ${DOMAIN}, served from ${PUBLIC_PATH}"
+okay "Nginx block created for ${DOMAIN}, served from ${PUBLIC_PATH}"
