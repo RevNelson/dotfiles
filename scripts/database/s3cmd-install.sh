@@ -58,4 +58,4 @@ curl -LO "https://github.com/s3tools/s3cmd/releases/download/v${S3CMD_VERSION}/s
 cd $HOME_DIRECTORY
 tar xf /tmp/s3cmd-*.tar.gz
 cd s3cmd-*
-python setup.py install
+python3 setup.py install

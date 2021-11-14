@@ -60,7 +60,7 @@ export USERTYPE="database-server"
 
 echo -e "\n###################################################"
 echo "Performing database server specific provisioning..."
-echo -e"###################################################\n"
+echo -e "###################################################\n"
 
 DOTBASE=$HOME_DIRECTORY/.dotfiles
 
@@ -106,7 +106,7 @@ EOF
 chmod 600 /etc/mysql/mariadb.conf.d/backup.cnf
 
 DB_BACKUP_KEY="/root/backup.key"
-if ! -f $DB_BACKUP_KEY; then
+if [ ! -f $DB_BACKUP_KEY ]; then
     echo "Do you want to generate a new encryption key for backups?"
     read -p "If not, you will need to run $(green mysql-backup-key) after provisioning. [y/n] " NEW_BACKUP_KEY
     if said_yes $NEW_BACKUP_KEY; then
