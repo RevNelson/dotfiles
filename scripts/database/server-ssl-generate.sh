@@ -3,7 +3,7 @@
 SSL_GENERATE_ABSOLUTE_PATH="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 # Check for HOME_DIRECTORY and set it if not found
-[[ -z "$HOME_DIRECTORY" ]] && HOME_DIRECTORY=$(getent passwd ${SUDO_USER:-$USER} | cut -d: -f6)
+[[ -z ${HOME_DIRECTORY:-} ]] && HOME_DIRECTORY=$(getent passwd ${SUDO_USER:-$USER} | cut -d: -f6)
 
 #############
 # Functions #
@@ -20,7 +20,7 @@ while getopts 'f' flag; do
     esac
 done
 
-[[ -z "$CONFIRMED" ]] && {
+[[ -z ${CONFIRMED:-} ]] && {
     echo -e "\nAre you sure you want to continue? All connections will be broken until you run $(magenta ssl-copy -i CLIENT_SERVER)."
     echo "You can skip this check by providing the '-f' flag. i.e. ssl-update -f"
     read -p "Please type 'yes' to confirm: " CONFIRMED

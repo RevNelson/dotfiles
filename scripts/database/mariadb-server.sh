@@ -1,15 +1,15 @@
 #!/bin/bash
 
 # Check for USERNAME and set it if not found
-[[ -z "$USERNAME" ]] && USERNAME=${SUDO_USER:-$USER}
+[[ -z ${USERNAME:-} ]] && USERNAME=${SUDO_USER:-$USER}
 
 # Check for HOME_DIRECTORY and set it if not found
-[[ -z "$HOME_DIRECTORY" ]] && HOME_DIRECTORY=$(getent passwd ${SUDO_USER:-$USER} | cut -d: -f6)
-[[ -z "$DOTBASE" ]] && DOTBASE=$HOME_DIRECTORY/.dotfiles
+[[ -z ${HOME_DIRECTORY:-} ]] && HOME_DIRECTORY=$(getent passwd ${SUDO_USER:-$USER} | cut -d: -f6)
+[[ -z ${DOTBASE:-} ]] && DOTBASE=$HOME_DIRECTORY/.dotfiles
 
 # Set MariaDB bind address if given
 if [ $# -lt 1 ]; then
-    [[ -z "$PRIVATE_IP" ]] && PRIVATE_IP="0.0.0.0"
+    [[ -z ${PRIVATE_IP:-} ]] && PRIVATE_IP="0.0.0.0"
 else
     PRIVATE_IP=$1
 fi

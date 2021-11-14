@@ -126,7 +126,7 @@ echo "Sourcing .zshrc ..."
 source $HOME_DIRECTORY/.zshrc >/dev/null
 EOF
 
-[[ -z "$USERTYPE" ]] && read -p "What type of server is this (webserver, devserver, database-server)? " USERTYPE
+[[ -z ${USERTYPE:-} ]] && read -p "What type of server is this (webserver, devserver, database-server)? " USERTYPE
 # Make usertype.sh
 USERTYPE_PATH=$HOME_DIRECTORY/.config/usertype.sh
 cat >${USERTYPE_PATH} <<EOF

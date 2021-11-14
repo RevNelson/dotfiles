@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # Check for HOME_DIRECTORY and set it if not found
-[[ -z "$HOME_DIRECTORY" ]] && HOME_DIRECTORY=$(getent passwd ${SUDO_USER:-$USER} | cut -d: -f6)
-[[ -z "$DOTBASE" ]] && DOTBASE=$HOME_DIRECTORY/.dotfiles
+[[ -z ${HOME_DIRECTORY:-} ]] && HOME_DIRECTORY=$(getent passwd ${SUDO_USER:-$USER} | cut -d: -f6)
+[[ -z ${DOTBASE:-} ]] && DOTBASE=$HOME_DIRECTORY/.dotfiles
 
 # Source function utils
 . $DOTBASE/functions/utils.sh

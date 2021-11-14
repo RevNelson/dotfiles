@@ -5,10 +5,10 @@ S3CMD_VERSION="2.2.0"
 SCRIPT_ABSOLUTE_PATH="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 # Check for USERNAME and set it if not found
-[[ -z "$USERNAME" ]] && USERNAME=${SUDO_USER:-$USER}
+[[ -z ${USERNAME:-} ]] && USERNAME=${SUDO_USER:-$USER}
 
 # Check for HOME_DIRECTORY and set it if not found
-[[ -z "$HOME_DIRECTORY" ]] && HOME_DIRECTORY=$(getent passwd ${SUDO_USER:-$USER} | cut -d: -f6)
+[[ -z ${HOME_DIRECTORY:-} ]] && HOME_DIRECTORY=$(getent passwd ${SUDO_USER:-$USER} | cut -d: -f6)
 
 #############
 # Functions #

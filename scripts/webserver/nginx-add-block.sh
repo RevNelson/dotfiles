@@ -8,7 +8,7 @@ NGINX_ADD_BLOCK_ABSOLUTE_PATH="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 FILENAME=$(basename "$0" .sh)
 
-[[ -z "$USERNAME" ]] && USERNAME=${SUDO_USER:-$USER}
+[[ -z ${USERNAME:-} ]] && USERNAME=${SUDO_USER:-$USER}
 
 BLOCK_TYPE="wp"
 
@@ -57,8 +57,8 @@ done
 [[ -z ${DOMAIN} ]] && error $FILENAME "No domain specified."
 
 # Variables
-[[ -z "$PUBLIC_PATH" ]] && PUBLIC_PATH=$PWD
-[[ -z "$LOGS_PATH" ]] && LOGS_PATH="$(dirname $PUBLIC_PATH)/logs"
+[[ -z ${PUBLIC_PATH:-} ]] && PUBLIC_PATH=$PWD
+[[ -z ${LOGS_PATH:-} ]] && LOGS_PATH="$(dirname $PUBLIC_PATH)/logs"
 NGINX_AVAILABLE='/etc/nginx/sites-available'
 NGINX_ENABLED='/etc/nginx/sites-enabled'
 

@@ -3,10 +3,10 @@
 SCRIPT_ABSOLUTE_PATH="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 # Check for USERNAME and set it if not found
-[[ -z "$USERNAME" ]] && USERNAME=${SUDO_USER:-$USER}
+[[ -z ${USERNAME:-} ]] && USERNAME=${SUDO_USER:-$USER}
 
 # Check for HOME_DIRECTORY and set it if not found
-[[ -z "$HOME_DIRECTORY" ]] && HOME_DIRECTORY=$(getent passwd ${SUDO_USER:-$USER} | cut -d: -f6)
+[[ -z ${HOME_DIRECTORY:-} ]] && HOME_DIRECTORY=$(getent passwd ${SUDO_USER:-$USER} | cut -d: -f6)
 
 #############
 # Functions #
@@ -61,7 +61,7 @@ while getopts 'hp:d:l:m:' flag; do
     esac
 done
 
-[[ -z "$PROJECT_PATH" ]] && error "No project_path specified. Use -h for more information."
+[[ -z ${PROJECT_PATH:-} ]] && error "No project_path specified. Use -h for more information."
 
 # Check DB data
 db_error() {
@@ -75,10 +75,10 @@ if [ ! -z "$DATABASE" ]; then
     DB_HOST="${DATABASE[3]}"
     [[ ! -z "${DATABASE[4]}" ]] && DB_SSL="${DATABASE[4]}"
 
-    [[ -z "$DB_USER" ]] && db_error "DB_USER"
-    [[ -z "$DB_PASS" ]] && db_error "DB_PASS"
-    [[ -z "$DB_NAME" ]] && db_error "DB_NAME"
-    [[ -z "$DB_HOST" ]] && db_error "DB_HOST"
+    [[ -z ${DB_USER:-} ]] && db_error "DB_USER"
+    [[ -z ${DB_PASS:-} ]] && db_error "DB_PASS"
+    [[ -z ${DB_NAME:-} ]] && db_error "DB_NAME"
+    [[ -z ${DB_HOST:-} ]] && db_error "DB_HOST"
 fi
 
 #############################

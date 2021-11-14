@@ -3,12 +3,12 @@
 FILENAME=$(basename "$0" .sh)
 
 # Check for USERNAME and set it if not found
-[[ -z "$USERNAME" ]] && USERNAME=${SUDO_USER:-$USER}
+[[ -z ${USERNAME:-} ]] && USERNAME=${SUDO_USER:-$USER}
 
 # Check for HOME_DIRECTORY and set it if not found
-[[ -z "$HOME_DIRECTORY" ]] && HOME_DIRECTORY=$(getent passwd ${SUDO_USER:-$USER} | cut -d: -f6)
+[[ -z ${HOME_DIRECTORY:-} ]] && HOME_DIRECTORY=$(getent passwd ${SUDO_USER:-$USER} | cut -d: -f6)
 
-[[ -z "$DOTBASE" ]] && DOTBASE=$HOME_DIRECTORY/.dotfiles
+[[ -z ${DOTBASE:-} ]] && DOTBASE=$HOME_DIRECTORY/.dotfiles
 
 if [ -f $DOTBASE/usertype.sh ]; then
     . $DOTBASE/usertype.sh

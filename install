@@ -46,7 +46,7 @@ elif [ "$OS" = "Darwin" ]; then
 fi
 
 # Check for USERNAME and set it if not found
-[[ -z "$USERNAME" ]] && USERNAME=${SUDO_USER:-$USER}
+[[ -z ${USERNAME:-} ]] && USERNAME=${SUDO_USER:-$USER}
 
 # Set upstream for dotfiles repo
 sudo -u $USERNAME git remote set-url origin "https://github.com/revnelson/dotfiles"

@@ -6,7 +6,7 @@
 
 FILENAME=$(basename "$0" .sh)
 
-[[ -z "$USERNAME" ]] && USERNAME=${SUDO_USER:-$USER}
+[[ -z ${USERNAME:-} ]] && USERNAME=${SUDO_USER:-$USER}
 
 usage_info() {
     BLNK=$(echo "$FILENAME" | sed 's/./ /g')
@@ -53,10 +53,10 @@ done
 [[ -z ${DOMAIN} ]] && error $FILENAME "No domain specified."
 
 # Set default variables
-[[ -z "$PUBLIC_PATH" ]] && PUBLIC_PATH=$PWD
-[[ -z "$LOGS_PATH" ]] && LOGS_PATH="$(dirname $PUBLIC_PATH)/logs"
-[[ -z "$NGINX_AVAILABLE" ]] && NGINX_AVAILABLE="/etc/nginx/sites-available"
-[[ -z "$FILE_PATH" ]] && FILE_PATH=$NGINX_AVAILABLE/$DOMAIN
+[[ -z ${PUBLIC_PATH:-} ]] && PUBLIC_PATH=$PWD
+[[ -z ${LOGS_PATH:-} ]] && LOGS_PATH="$(dirname $PUBLIC_PATH)/logs"
+[[ -z ${NGINX_AVAILABLE:-} ]] && NGINX_AVAILABLE="/etc/nginx/sites-available"
+[[ -z ${FILE_PATH:-} ]] && FILE_PATH=$NGINX_AVAILABLE/$DOMAIN
 
 # Create nginx config file
 cat >$FILE_PATH <<EOF
