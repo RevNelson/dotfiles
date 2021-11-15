@@ -14,9 +14,8 @@ if [ -f $DOTBASE/usertype.sh ]; then
     . $DOTBASE/usertype.sh
 fi
 
-OUTPUT_DIR="${HOME_DIRECTORY}/backups"
 CURRENTDATE=$(date +"%Y-%m-%d")
-OUTPUT_PATH="${OUTPUT_DIR}/alldb_${CURRENTDATE}.sql.bz2.enc"
+OUTPUT_NAME="alldb_${CURRENTDATE}.sql.bz2.enc"
 KEY_PATH="/etc/mysql/mdbbackup-pub.key"
 
 # Source function utils
@@ -28,8 +27,8 @@ run_as_root $FILENAME
 
 usage_info() {
     BLNK=$(echo "$FILENAME" | sed 's/./ /g')
-    echo "Usage: $FILENAME [{-k} public-key-path] [{-o} output-path] \\"
-    echo -e "\n        e.g. $(magenta sudo ./$FILENAME)"
+    echo "Usage: $FILENAME [{-k} public-key-path] [{-o} output-name] [{-s} s3-host] \\"
+    echo -e "\n        e.g. $(magenta sudo ./$FILENAME -s example-host)"
 
 }
 
@@ -43,14 +42,16 @@ help() {
     usage_info
     echo
     echo "  {-k} public-key-path    -- Path to public key (default $KEY_PATH)"
-    echo "  {-o} output-path        -- Set path for output of backup (default $OUTPUT_PATH)"
+    echo "  {-o} output-name        -- Set name for backup (default $OUTPUT_NAME)"
+    echo "  {-s} s3-host            -- Set hostname for S3 (required)"
     exit 0
 }
 
-while getopts 'hk:o:' flag; do
+while getopts 'hk:o:s:' flag; do
     case "${flag}" in
     k) KEY_PATH="${OPTARG}" ;;
     o) OUTPUT_PATH="${OPTARG}" ;;
+    s) S3_HOST_DB_BACKUP="${OPTARG}" ;;
     h) help ;;
     *)
         usage_info
@@ -59,7 +60,23 @@ while getopts 'hk:o:' flag; do
     esac
 done
 
+if [ ! -f /root/.s3cfg ]; then
+    echo -e "\n$(red No .s3cfg found for sudo user.)\n"
+    echo -e"Please run:\n"
+    echo "$(magenta s3cmd --configure)"
+    echo -e "\nand then link the config to root with:\n"
+    echo -e "$(magenta sudo ln -s $HOME_DIRECTORY/.s3cmd /root/)\n"
+    exit 1
+fi
+
+# Check for s3-host flag
+if [ -z ${S3_HOST_DB_BACKUP:-} ]; then
+    echo -e "\n$(red No s3-host provided.)\n"
+    echo -e"Please pass the s3-host flag (i.e. $(magenta -s example-host)\n"
+    exit 1
+fi
+
 # Dump all databases and directly zip and ecrypt the file.
 mysqldump --routines --triggers --events --quick --single-transaction \
     --all-databases | bzip2 | openssl smime -encrypt -binary -text -aes256 \
-    -out ${OUTPUT_PATH} -outform DER ${KEY_PATH} && chmod 600 ${OUTPUT_PATH}
+    -outform DER ${KEY_PATH} | s3cmd put - s3://${S3_HOST_DB_BACKUP}/${OUTPUT_NAME}
