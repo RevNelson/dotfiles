@@ -100,7 +100,7 @@ mysql -e "FLUSH PRIVILEGES;"
 # Create backup.cnf
 cat >/etc/mysql/mariadb.conf.d/backup.cnf <<EOF
 [mysqldump]
-user = mdbbackup"
+user = mdbbackup
 password = ${DB_BACKUP_USER_PASS}
 EOF
 chmod 600 /etc/mysql/mariadb.conf.d/backup.cnf

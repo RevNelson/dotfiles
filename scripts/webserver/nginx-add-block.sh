@@ -114,3 +114,5 @@ nginx -t
 service nginx restart
 
 okay "Nginx block created for ${DOMAIN}, served from ${PUBLIC_PATH}"
+
+# TODO - Accept multiple domains (i.e. example.com:www.example.com)
