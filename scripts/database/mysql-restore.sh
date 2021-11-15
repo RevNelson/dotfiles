@@ -14,7 +14,7 @@ if [ -f $DOTBASE/usertype.sh ]; then
     . $DOTBASE/usertype.sh
 fi
 
-KEY_PATH=$HOME_DIRECTORY/backups.key
+KEY_PATH=$HOME_DIRECTORY/backup.key
 
 # Source function utils
 . $DOTBASE/functions/utils.sh
@@ -25,8 +25,8 @@ run_as_root $FILENAME
 
 usage_info() {
     BLNK=$(echo "$FILENAME" | sed 's/./ /g')
-    echo "Usage: $FILENAME [{-i} input-path] [{-d} database-name] [{-k} priveat-key-path] \\"
-    echo -e "\n        e.g. $(magenta sudo ./$FILENAME -i $HOME_DIRECTORY/backup.sql.bz2.enc -d ${USERNAME}_api -k $KEY_PATH)"
+    echo "Usage: $FILENAME [{-i} input-path] [{-d} database-names] [{-k} priveat-key-path] \\"
+    echo -e "\n        e.g. $(magenta sudo ./$FILENAME -i $HOME_DIRECTORY/backup.sql.bz2.enc -d ${USERNAME}_api:other_database -k $KEY_PATH)"
 
 }
 
@@ -40,15 +40,16 @@ help() {
     usage_info
     echo
     echo "  {-i} input-path         -- Set path for backup file (REQUIRED)"
-    echo "  {-d} database-name      -- Set name for database to restore from backup (REQUIRED)"
+    echo "  {-d} database-names     -- Set name(s) for database to restore from backup (REQUIRED)"
     echo "  {-k} public-key-path    -- Path to private key for encrypted backups (default $KEY_PATH)"
+    echo "  Public key will be deleted at the end of the script!"
     exit 0
 }
 
 while getopts 'hi:d:k:' flag; do
     case "${flag}" in
     i) INPUT_PATH="${OPTARG}" ;;
-    d) DATABASE_NAME="${OPTARG}" ;;
+    d) IFS=: read -a DATABASE_NAMES <<<"$OPTARG" ;;
     k) KEY_PATH="${OPTARG}" ;;
     h) help ;;
     *)
@@ -77,20 +78,24 @@ if [[ $INPUT_PATH == *.enc ]]; then
 
         # Update input path with decrypted file for rest of script.
         INPUT_PATH=$NEW_INPUT
+
+        DECRYPTED_BACKUP=$NEW_INPUT
     fi
 fi
 
-if [ -z "$DATABASE_NAME" ]; then
+if [ -z ${DATABASE_NAMES:-} ]; then
     read -p "Do you really want to restore ALL databases from the backup file? [y/n] " BACKUP_ALL
     if ! said_yes $BACKUP_ALL; then
-        read -p "Enter database name to restore or press CTRL+C to exit script: " DATABASE_NAME
+        read -p "Enter database name(s) to restore or press CTRL+C to exit script: " DATABASE_NAMES
     fi
 fi
 
 # Check if input file is compressed
 if [[ $INPUT_PATH == *.bz2 ]]; then
-    if [ -z "$BACKUP_ALL"]; then
-        bunzip2 <$INPUT_PATH | mysql --one-database $DATABASE_NAME
+    if [ -z ${BACKUP_ALL:-}]; then
+        for DATABASE_NAME in "${DATABASE_NAMES[@]}"; do
+            bunzip2 <$INPUT_PATH | mysql --one-database $DATABASE_NAME
+        done
     else
         if said_yes $BACKUP_ALL; then
             bunzip2 <$INPUT_PATH | mysql
@@ -99,3 +104,8 @@ if [[ $INPUT_PATH == *.bz2 ]]; then
         fi
     fi
 fi
+
+# Remove decrypted backup and private key for security
+[[ ! -z ${DECRYPTED_BACKUP:-} ]] && rm $DECRYPTED_BACKUP
+
+rm $KEY_PATH

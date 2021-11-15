@@ -66,19 +66,19 @@ while getopts 'h:u:p:i:d:' flag; do
 done
 
 # Check for all required arguments
-[[ -z ${DESTINATION_IP} ]] && {
+[[ -z ${DESTINATION_IP:-} ]] && {
     echo "Must provide the destination for the copy. e.g. webserver , devserver , 192.168.0.30"
     help
 }
-[[ -z ${SERVER_USER} ]] && {
+[[ -z ${SERVER_USER:-} ]] && {
     echo "No user provided. Defaulting to user $USERNAME."
     SERVER_USER=$USERNAME
 }
-[[ -z ${SERVER_PORT} ]] && {
+[[ -z ${SERVER_PORT:-} ]] && {
     echo "No port provided. Defaulting to port $SSH_PORT."
     SERVER_PORT=$SSH_PORT
 }
-[[ -z ${DESTINATION_PATH} ]] && DESTINATION_PATH="/etc/mysql/ssl"
+[[ -z ${DESTINATION_PATH:-} ]] && DESTINATION_PATH="/etc/mysql/ssl"
 
 SSL_CA_PATH="/etc/mysql/ssl/cacert.pem"
 SSL_CERT_PATH="/etc/mysql/ssl/client-cert.pem"

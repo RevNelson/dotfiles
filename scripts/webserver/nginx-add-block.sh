@@ -66,7 +66,7 @@ done
 
 # Sanity check
 [ $(id -g) != "0" ] && die "Script must be run as root."
-[[ -z ${DOMAIN} ]] && error $FILENAME "No domain specified."
+[[ -z ${DOMAIN:-} ]] && error $FILENAME "No domain specified."
 
 # Variables
 [[ -z ${PUBLIC_PATH:-} ]] && PUBLIC_PATH=$PWD

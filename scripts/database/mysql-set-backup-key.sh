@@ -59,7 +59,7 @@ while getopts 'hk:d:' flag; do
 done
 
 if [ -f $KEY_PATH ]; then
-    if [ -z "$ENCRYPTION_PASS" ]; then
+    if [ -z ${ENCRYPTION_PASS:-} ]; then
         echo "Encryption password: "
         read -s ENCRYPTION_PASS
     fi
