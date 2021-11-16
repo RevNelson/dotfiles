@@ -50,7 +50,7 @@ help() {
 while getopts 'hk:o:s:' flag; do
     case "${flag}" in
     k) KEY_PATH="${OPTARG}" ;;
-    o) OUTPUT_PATH="${OPTARG}" ;;
+    o) OUTPUT_NAME="${OPTARG}" ;;
     s) S3_HOST_DB_BACKUP="${OPTARG}" ;;
     h) help ;;
     *)

@@ -79,6 +79,15 @@ if ! id -u "$USERNAME" >/dev/null 2>&1; then
         echo "${PUB_KEY}" >>"${HOME_DIRECTORY}/.ssh/authorized_keys"
     done
 
+    # Add config file for github
+    SSH_CONFIG_PATH="${HOME_DIRECTORY}/.ssh/config"
+    cat >${SSH_CONFIG_PATH} <<EOF
+Host github.com
+    Hostname        github.com
+    IdentityFile    ~/.ssh/id_ed
+    IdentitiesOnly yes
+EOF
+
     # Adjust SSH configuration ownership and permissions
     chmod 0700 "${HOME_DIRECTORY}/.ssh"
     chmod 0600 "${HOME_DIRECTORY}/.ssh/authorized_keys"

@@ -43,7 +43,7 @@ help() {
 # Script Variables #
 ####################
 
-while getopts 'hp:d:l:m:' flag; do
+while getopts 'hp:d:l:m:c:' flag; do
     case $flag in
     h)
         help

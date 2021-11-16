@@ -88,6 +88,22 @@ apt_quiet install php-mysql php-curl php-gd php-imagick php-intl php-mbstring ph
 
 systemctl restart php8.0-fpm
 
+###############
+# Install NVM #
+###############
+
+NVM_VERSION="0.39.0"
+
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v${NVM_VERSION}/install.sh | bash
+
+IFS: read -a NODE_VERSIONS <<<"node:16:15:14"
+
+# Install each node version with yarn
+for NODE_VERSION in "${NODE_VERSIONS[@]}"; do
+    nvm install $NODE_VERSION
+    npm install -g yarn
+done
+
 ##################
 # Install WP-Cli #
 ##################
