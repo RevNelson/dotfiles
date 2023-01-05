@@ -2,6 +2,7 @@ path=(
     /usr/local/bin
     /usr/bin
     /bin
+    /sbin
     /usr/local/sbin
     /usr/sbin
     /opt/local/bin
@@ -16,4 +17,5 @@ path=(
     $HOME/packages
     $HOME/Library/Python/3.8/bin
     $HOME/.pyenv/bin
+    $HOME/.rover/bin
 )

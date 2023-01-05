@@ -237,7 +237,7 @@ npx() {
     npx $@
 }
 
-nvm use 16
+nvm use 18
 
 ########
 # TMUX #
@@ -287,3 +287,5 @@ fi
 if [ -f ~/.config/servers.sh ]; then
     . ~/.config/servers.sh
 fi
+
+export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
