@@ -60,4 +60,6 @@ alias l='ls'
 alias getip="curl icanhazip.com"
 
 alias apt='sudo apt'
-alias sshp='cat ~/.ssh/id_ed*.pub'
+alias ssh-print='cat ~/.ssh/id_ed*.pub'
+alias ssh-create='ssh-keygen -t ed25519 -N "" -C'
+alias as-nginx='sudo -u www-data'
