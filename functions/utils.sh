@@ -12,7 +12,7 @@ said_yes() {
 }
 
 apt_quiet() {
-    DEBIAN_FRONTEND=noninteractive apt-get -yqq $* >/dev/null
+    DEBIAN_FRONTEND=noninteractive apt-get -yqq $* >/dev/null 2>&1
 }
 
 # Load colors

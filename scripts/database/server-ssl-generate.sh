@@ -18,7 +18,7 @@ while getopts 'f' flag; do
     esac
 done
 
-if said_yes PROVISION_DROPLET; then
+if said_yes $PROVISION_DROPLET; then
     CONFIRMED="y"
 else
     [[ -z ${CONFIRMED:-} ]] && {
@@ -37,18 +37,18 @@ fi
 echo "Generating secure certificates for MariaDB..."
 mkdir -p $HOME_DIRECTORY/certs && cd $HOME_DIRECTORY/certs
 
-openssl genrsa 4096 >ca-key.pem >/dev/null
-openssl req -new -x509 -nodes -days 3650 -key ca-key.pem -out cacert.pem -subj "/C=US/ST=CA/L=LA/O=Dis/CN=MariaDB-admin" >/dev/null
-openssl req -newkey rsa:4096 -days 3650 -nodes -keyout server-key.pem -out server-req.pem -subj "/C=US/ST=CA/L=LA/O=Dis/CN=MariaDB-server" >/dev/null
-openssl rsa -in server-key.pem -out server-key.pem >/dev/null
-openssl x509 -req -in server-req.pem -days 3650 -CA cacert.pem -CAkey ca-key.pem -set_serial 01 -out server-cert.pem >/dev/null
+openssl genrsa 4096 >ca-key.pem
+openssl req -new -x509 -nodes -days 3650 -key ca-key.pem -out cacert.pem -subj "/C=US/ST=CA/L=LA/O=Dis/CN=MariaDB-admin" >/dev/null 2>&1
+openssl req -newkey rsa:4096 -days 3650 -nodes -keyout server-key.pem -out server-req.pem -subj "/C=US/ST=CA/L=LA/O=Dis/CN=MariaDB-server" >/dev/null 2>&1
+openssl rsa -in server-key.pem -out server-key.pem >/dev/null 2>&1
+openssl x509 -req -in server-req.pem -days 3650 -CA cacert.pem -CAkey ca-key.pem -set_serial 01 -out server-cert.pem >/dev/null 2>&1
 
 CERTS_DESTINATION=/etc/mysql/ssl
 mkdir -p $CERTS_DESTINATION
 mv *.* $CERTS_DESTINATION && cd $CERTS_DESTINATION
-openssl req -newkey rsa:2048 -days 3650 -nodes -keyout client-key.pem -out client-req.pem -subj "/C=US/ST=CA/L=LA/O=Dis/CN=MariaDB-client" >/dev/null
-openssl rsa -in client-key.pem -out client-key.pem >/dev/null
-openssl x509 -req -in client-req.pem -days 3650 -CA cacert.pem -CAkey ca-key.pem -set_serial 01 -out client-cert.pem >/dev/null
+openssl req -newkey rsa:2048 -days 3650 -nodes -keyout client-key.pem -out client-req.pem -subj "/C=US/ST=CA/L=LA/O=Dis/CN=MariaDB-client" >/dev/null 2>&1
+openssl rsa -in client-key.pem -out client-key.pem >/dev/null 2>&1
+openssl x509 -req -in client-req.pem -days 3650 -CA cacert.pem -CAkey ca-key.pem -set_serial 01 -out client-cert.pem >/dev/null 2>&1
 
 # Set certs folder to mysql ownership
 chown -R mysql:mysql $CERTS_DESTINATION
