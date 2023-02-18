@@ -42,3 +42,10 @@ run_as_root() {
     [ $EUID != "0" ] && error "$SCRIPT must be run as root."
     return 0
 }
+
+print_section() {
+    BLNK=$(echo "$@" | sed 's/./#/g')
+    echo -e "\n$(green $BLNK)"
+    echo "$(green $@)"
+    echo -e "\n$(green $BLNK)"
+}
