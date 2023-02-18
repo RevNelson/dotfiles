@@ -1,7 +1,5 @@
 #!/bin/bash
 
-S3CMD_VERSION="2.3.0"
-
 SCRIPT_ABSOLUTE_PATH="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 # Check for USERNAME and set it if not found
@@ -31,13 +29,12 @@ usage_info() {
 # Script Variables #
 ####################
 
-while getopts 'hv:' flag; do
+while getopts 'h' flag; do
     case $flag in
     h)
         usage_info
         exit 1
         ;;
-    v) S3CMD_VERSION="${OPTARG}" ;;
     *)
         usage_info
         exit 1
