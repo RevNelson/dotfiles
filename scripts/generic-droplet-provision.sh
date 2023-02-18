@@ -74,6 +74,7 @@ echo "Performing initial package updates and installing zsh..."
 apt_quiet update && apt_quiet upgrade
 apt_quiet install zsh
 
+echo "Checking SSH keys..."
 # Generate SSH key for root user
 HOST=$(cat /etc/hostname)
 ROOT_SSH_KEY="/root/.ssh/id_ed"
@@ -82,7 +83,7 @@ if [ ! -f $ROOT_SSH_KEY ]; then
 fi
 
 # Add sudo user and grant privileges
-if ! id -u "$USERNAME" >/dev/null 2>&1; then
+if ! id -u "$USERNAME" >/dev/null; then
     echo "Creating new user: $USERNAME ..."
     useradd -m -p $USER_PASSWORD -s "/bin/zsh" --groups sudo $USERNAME
 
@@ -125,7 +126,8 @@ EOF
     ufw --force enable >/dev/null
 
     echo "SSH configured."
-
+else
+    echo "User $USERNAME already exists. Moving on..."
 fi
 
 # Check whether the root account has a real password set
