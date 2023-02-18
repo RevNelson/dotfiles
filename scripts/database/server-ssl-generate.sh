@@ -58,4 +58,4 @@ systemctl restart mysql
 
 echo -e "\n$(green Certificates are installed. Run ssl-copy.sh to place SSL certificates on clients.)\n"
 
-$SSL_GENERATE_ABSOLUTE_PATH/ssl-copy.sh -h
+$SSL_GENERATE_ABSOLUTE_PATH/ssl-copy.sh

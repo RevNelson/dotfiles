@@ -48,7 +48,6 @@ help() {
     echo "  {-h} server-host         -- Set server host for where to copy certificates (e.g. webserver, devserver, 192.169.0.30)"
     echo "  {-i} identity-file       -- Set local identity file for ssh connection (default: $IDENTITY_FILE"
     echo "  {-d} destination-dir     -- Set user for chmod on public folder (default: /etc/mysql/ssl)"
-    exit 0
 }
 
 while getopts 'h:u:p:i:d:' flag; do
@@ -59,8 +58,8 @@ while getopts 'h:u:p:i:d:' flag; do
     i) IDENTITY_FILE="${OPTARG}" ;;
     d) DESTINATION_PATH="${OPTARG}" ;;
     *)
-        usage_info
-        exit 1
+        help
+        exit 0
         ;;
     esac
 done
