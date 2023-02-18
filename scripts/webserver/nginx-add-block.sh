@@ -48,7 +48,7 @@ help() {
 }
 
 while getopts 'hd:r:l:t:' flag; do
-    case "${flag}" in
+    case "$flag" in
     h)
         help
         exit 1

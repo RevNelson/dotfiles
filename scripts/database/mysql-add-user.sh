@@ -46,7 +46,7 @@ help() {
     exit 0
 }
 
-while getopts 'suhpd:' flag; do
+while getopts 's:u:h:p:d:' flag; do
     case "$flag" in
     s) SSL=" REQUIRE SSL" ;;
     u) DB_USER="${OPTARG}" ;;

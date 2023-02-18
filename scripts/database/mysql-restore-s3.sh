@@ -47,7 +47,7 @@ help() {
     exit 0
 }
 
-while getopts 'hbdks:' flag; do
+while getopts 'hb:d:k:s:' flag; do
     case "$flag" in
     h) help ;;
     b) BACKUP_DATE="${OPTARG}" ;;

@@ -46,7 +46,7 @@ help() {
     exit 0
 }
 
-while getopts 'hidk:' flag; do
+while getopts 'hi:d:k:' flag; do
     case "$flag" in
     h) help ;;
     i) INPUT_PATH="${OPTARG}" ;;

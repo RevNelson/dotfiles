@@ -37,14 +37,14 @@ help() {
     usage_info
     echo
     echo "  {-f} force        -- (Flag only) Force updating dotfiles. $(red OVERWRITES ANY LOCAL CHANGES)"
-    echo "  {-h} help             -- Print this message"
+    echo "  {-h} help         -- Print this message"
     exit 0
 }
 
-while getopts 'fh' flag; do
-    case "${flag}" in
-    f) FORCE="true" ;;
+while getopts 'hf' flag; do
+    case "$flag" in
     h) help ;;
+    f) FORCE="true" ;;
     *)
         usage_info
         exit 1

@@ -70,9 +70,9 @@ help() {
 ##
 #
 
-while getopts 'hsd:' flag; do
+while getopts 'hs:d:' flag; do
     case "$flag" in
-    h) usage_info ;;
+    h) help ;;
     s) SOURCE_DIRECTORY="${OPTARG}" ;;
     d) DESTINATION_DIRECTORY="${OPTARG}" ;;
     *)

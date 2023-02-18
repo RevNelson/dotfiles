@@ -51,7 +51,7 @@ help() {
     exit 0
 }
 
-while getopts 'hupid:' flag; do
+while getopts 'h:u:p:i:d:' flag; do
     case "$flag" in
     h) DESTINATION_IP="${OPTARG}" ;;
     u) SERVER_USER="${OPTARG}" ;;
