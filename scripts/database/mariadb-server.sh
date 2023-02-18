@@ -127,10 +127,10 @@ chmod 600 /etc/mysql/mariadb.conf.d/backup.cnf
 DB_BACKUP_KEY="$HOME_DIRECTORY/backup.key"
 if [ ! -f $DB_BACKUP_KEY ]; then
     if said_yes $PROVISION_DROPLET; then
+        NEW_BACKUP_KEY=yes
+    else
         echo "Do you want to generate a new encryption key for backups?"
         read -p "If not, you will need to run $(green mysql-backup-key) after provisioning. [y/n] " NEW_BACKUP_KEY
-    else
-        NEW_BACKUP_KEY=yes
     fi
 
     if said_yes $NEW_BACKUP_KEY; then
