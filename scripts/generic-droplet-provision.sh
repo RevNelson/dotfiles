@@ -1,9 +1,15 @@
 #!/bin/bash
 set -euo pipefail
 
-########################
-### SCRIPT VARIABLES ###
-########################
+#
+##
+###
+#############
+# Variables #
+#############
+###
+##
+#
 
 # Name of the user to create and grant sudo privileges
 USERNAME=$1
@@ -35,9 +41,29 @@ COPY_AUTHORIZED_KEYS_FROM_ROOT=true
 # )
 OTHER_PUBLIC_KEYS_TO_ADD=()
 
-####################
-### SCRIPT LOGIC ###
-####################
+#
+##
+###
+#############
+# Functions #
+#############
+###
+##
+#
+
+# Source function utils
+. $DOTBASE/functions/utils.sh
+
+#
+##
+###
+##########
+# Script #
+##########
+###
+##
+#
+
 echo -e "\n#######################"
 echo "Provisioning Droplet..."
 echo -e "#######################\n"
@@ -45,8 +71,8 @@ echo -e "#######################\n"
 HOME_DIRECTORY="/home/${USERNAME}"
 
 echo "Performing initial package updates and installing zsh..."
-apt-get update >/dev/null && apt-get upgrade -y >/dev/null
-apt-get install zsh -y >/dev/null
+apt_quiet update && apt_quiet upgrade
+apt_quiet install zsh
 
 # Generate SSH key for root user
 HOST=$(cat /etc/hostname)
@@ -57,6 +83,7 @@ fi
 
 # Add sudo user and grant privileges
 if ! id -u "$USERNAME" >/dev/null 2>&1; then
+    echo "Creating new user: $USERNAME ..."
     useradd -m -p $USER_PASSWORD -s "/bin/zsh" --groups sudo $USERNAME
 
     #######
@@ -66,7 +93,7 @@ if ! id -u "$USERNAME" >/dev/null 2>&1; then
     # Create SSH directory for new user
     mkdir -p $HOME_DIRECTORY/.ssh
 
-    # Generate SSH key for new user
+    echo "Generating SSH key for $USERNAME..."
     ssh-keygen -t ed25519 -N "" -C "${USERNAME}@${HOST}" -f "${HOME_DIRECTORY}/.ssh/id_ed" >/dev/null
 
     # Copy `authorized_keys` file from root if requested
@@ -97,6 +124,8 @@ EOF
     ufw allow ${SSH_PORT}/tcp >/dev/null
     ufw --force enable >/dev/null
 
+    echo "SSH configured."
+
 fi
 
 # Check whether the root account has a real password set
@@ -122,6 +151,8 @@ echo "SSH has been set to use port ${SSH_PORT}"
 ###########
 # Dotbase #
 ###########
+
+echo "Copying dotfiles to $USERNAME's home folder..."
 
 # Copy .dotfiles to new user folder, apply ownership, and make executable
 cp -r /root/.dotfiles/ ${HOME_DIRECTORY}

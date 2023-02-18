@@ -1,8 +1,14 @@
 #!/bin/bash
 
-####################
-# Script Variables #
-####################
+#
+##
+###
+#############
+# Variables #
+#############
+###
+##
+#
 
 read -p "Username: " USERNAME
 [[ -z ${USERNAME} ]] && {
@@ -20,12 +26,6 @@ read -s USER_PASSWORD
 read -p "SSH Port (Press Enter for 22): " SSH_PORT
 [[ -z ${SSH_PORT} ]] && export SSH_PORT=22
 
-read -p "Private IP (this droplet): " PRIVATE_IP
-[[ -z ${PRIVATE_IP} ]] && {
-    echo "Must provide the private IP of this droplet."
-    exit 1
-}
-
 read -p "Private Webserver Server IP: " WEBSERVER_IP
 [[ -z ${WEBSERVER_IP} ]] && {
     echo "Must provide the private IP of the webserver droplet."
@@ -34,23 +34,19 @@ read -p "Private Webserver Server IP: " WEBSERVER_IP
 
 read -p "Private Devserver IP (optional): " DEVSERVER_IP
 
-echo "Password for MariaDB backup user: "
-read -s DB_BACKUP_USER_PASS
-[[ -z ${DB_BACKUP_USER_PASS} ]] && {
-    echo "Must provide a password for the MariaDB backup user."
-    exit 1
-}
-
-echo "Password for decrypting database backups: "
-read -s ENCRYPTION_PASS
-[[ -z ${ENCRYPTION_PASS} ]] && {
-    echo "Must provide a password for the database backup encryption."
-    exit 1
-}
-
 export HOME_DIRECTORY="/home/${USERNAME}"
 
 export USERTYPE="database-server"
+
+#
+##
+###
+#############
+# Functions #
+#############
+###
+##
+#
 
 ##############################
 # Initialize generic droplet #
@@ -62,6 +58,7 @@ echo -e "\n###################################################"
 echo "Performing database server specific provisioning..."
 echo -e "###################################################\n"
 
+# Update dotbase for new user
 DOTBASE=$HOME_DIRECTORY/.dotfiles
 
 # Source function utils
@@ -86,42 +83,7 @@ echo "${WEBSERVER_IP} webserver" >>/etc/hosts
 # Install MariaDB #
 ###################
 
-echo "Installing MariaDB Client..."
-. $DOTBASE/scripts/database/mariadb-server.sh
-
-#########################################
-# Provision backup user with encryption #
-#########################################
-
-# Add backup user in mysql
-mysql -e "GRANT SELECT, TRIGGER, EVENT, SHOW VIEW ON *.* TO 'mdbbackup'@'localhost' IDENTIFIED BY '${DB_BACKUP_USER_PASS}';"
-mysql -e "FLUSH PRIVILEGES;"
-
-# Create backup.cnf
-cat >/etc/mysql/mariadb.conf.d/backup.cnf <<EOF
-[mysqldump]
-user = mdbbackup
-password = ${DB_BACKUP_USER_PASS}
-EOF
-chmod 600 /etc/mysql/mariadb.conf.d/backup.cnf
-
-DB_BACKUP_KEY="/root/backup.key"
-if [ ! -f $DB_BACKUP_KEY ]; then
-    echo "Do you want to generate a new encryption key for backups?"
-    read -p "If not, you will need to run $(green mysql-backup-key) after provisioning. [y/n] " NEW_BACKUP_KEY
-    if said_yes $NEW_BACKUP_KEY; then
-        # Generate and sign encryption certificate
-        openssl genpkey -algorithm RSA -pass pass:$ENCRYPTION_PASS -out $HOME_DIRECTORY/backup.key -pkeyopt rsa_keygen_bits:4096 -aes256
-        . $DOTBASE/scripts/database/mysql-set-backup-key.sh -k $DB_BACKUP_KEY
-    fi
-else
-    . $DOTBASE/scripts/database/mysql-set-backup-key.sh -k $DB_BACKUP_KEY
-fi
-##################################
-# Generate SSL certs for MariaDB #
-##################################
-
-. $DOTBASE/scripts/database/server-ssl-generate.sh -f
+. $DOTBASE/scripts/database/mariadb-server.sh ${USERNAME} ${HOME_DIRECTORY} ${DOTBASE}
 
 #############
 # DO Spaces #

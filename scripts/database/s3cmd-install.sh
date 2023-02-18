@@ -1,6 +1,6 @@
 #!/bin/bash
 
-S3CMD_VERSION="2.2.0"
+S3CMD_VERSION="2.3.0"
 
 SCRIPT_ABSOLUTE_PATH="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
@@ -23,15 +23,8 @@ run_as_root $FILENAME
 
 usage_info() {
     BLNK=$(echo "$FILENAME" | sed 's/./ /g')
-    echo "Usage: sudo $FILENAME [{-d} domain] [{-p} project_path] [{-l} logs_path]  \\"
-    echo -e "\n       $BLNK e.g. $(magenta sudo ./$FILENAME -v ${S3CMD_VERSION})"
-}
-
-help() {
-    usage_info
-    echo
-    echo "  {-v} version   -- Set version of s3cmd to install (default: ${S3CMD_VERSION}"
-    exit 0
+    echo "Usage: sudo $FILENAME   \\"
+    echo -e "\n       Installs the latest version of s3cmd."
 }
 
 ####################
@@ -41,7 +34,7 @@ help() {
 while getopts 'hv:' flag; do
     case $flag in
     h)
-        help
+        usage_info
         exit 1
         ;;
     v) S3CMD_VERSION="${OPTARG}" ;;
@@ -52,10 +45,18 @@ while getopts 'hv:' flag; do
     esac
 done
 
-apt_quiet install python-setuptools -y
+# Install dependencies
+apt_quiet install python-setuptools
+
 cd /tmp
-curl -LO "https://github.com/s3tools/s3cmd/releases/download/v${S3CMD_VERSION}/s3cmd-${S3CMD_VERSION}.tar.gz"
+wget $(curl -s https://api.github.com/repos/s3tools/s3cmd/releases/latest | grep 'browser_' | cut -d\" -f4)
+
 cd $HOME_DIRECTORY
 tar xf /tmp/s3cmd-*.tar.gz
 cd s3cmd-*
 python3 setup.py install
+
+# Clean up
+cd $HOME_DIRECTORY
+rm -rf s3cmd-*
+rm -rf /tmp/s3cmd-*

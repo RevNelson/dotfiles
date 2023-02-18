@@ -61,14 +61,12 @@ echo "${DATABASE_IP} database-server" >>/etc/hosts
 # Install MariaDB #
 ###################
 
-echo "Installing MariaDB Client..."
 . $DOTBASE/scripts/webserver/mariadb-client.sh
 
 #################
 # Install Nginx #
 #################
 
-echo "Installing Nginx..."
 . $DOTBASE/scripts/webserver/nginx-update.sh
 
 ###############
@@ -76,38 +74,35 @@ echo "Installing Nginx..."
 ###############
 
 echo "Installing PHP..."
-apt_quiet install ca-certificates apt-transport-https software-properties-common -y
-add-apt-repository --yes ppa:ondrej/php >/dev/null
-apt_quiet update && apt_quiet install php8.0-fpm -y
-
-# Install PHP extensions for WP
-apt_quiet install php-mysql php-curl php-gd php-imagick php-intl php-mbstring php-soap php-xml php-xmlrpc php-zip -y
-
-# Add webserver PHP settings overrides
-. $DOTBASE/scripts/webserver/php-update-overrides.sh
-
-systemctl restart php8.0-fpm
+. $DOTBASE/scripts/webserver/php-update.sh
 
 ###############
 # Install NVM #
 ###############
 
-NVM_VERSION="0.39.0"
+NVM_VERSION="0.39.3"
 
+echo "Installing NVM v$NVM_VERSION..."
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v${NVM_VERSION}/install.sh | bash
 
-IFS: read -a NODE_VERSIONS <<<"node:16:15:14"
+# Install node
+NODE_VERSION="18"
 
-# Install each node version with yarn
-for NODE_VERSION in "${NODE_VERSIONS[@]}"; do
-    nvm install $NODE_VERSION
-    npm install -g yarn
-done
+echo "Installing latest LTS node version..."
+apt_quiet install build-essential
+
+echo "Installing latest LTS node version..."
+echo "\n$(magenta 'This may take a long time if it needs to be compiled.')"
+nvm install --lts
+
+echo "Installing global node packages..."
+npm install -g yarn encoding
 
 ##################
-# Install WP-Cli #
+# Install WP-CLI #
 ##################
 
+echo "Installing WP-CLI..."
 cd /tmp
 curl -S -s -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
 chmod +x /tmp/wp-cli.phar
@@ -115,8 +110,18 @@ mv /tmp/wp-cli.phar /usr/local/bin/wp
 mkdir -p /var/www/.wp-cli/cache
 chown -R www-data:www-data /var/www/.wp-cli/cache
 
-# Performing final package updates
-apt_quiet update && apt_quiet upgrade -y
+####################
+# Install Composer #
+####################
+
+echo "Installing Composer..."
+curl -sS https://getcomposer.org/installer -o /tmp/composer-setup.php
+php /tmp/composer-setup.php --install-dir=/usr/local/bin --filename=composer
+
+#########################################################
+
+echo "Performing final package updates..."
+apt_quiet update && apt_quiet upgrade
 
 su - $USERNAME
 

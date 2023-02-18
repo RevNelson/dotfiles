@@ -47,7 +47,7 @@ help() {
     echo "  {-p} server-port         -- Set port for SSH connection (default: ${SSH_PORT})"
     echo "  {-h} server-host         -- Set server host for where to copy certificates (e.g. webserver, devserver, 192.169.0.30)"
     echo "  {-i} identity-file       -- Set local identity file for ssh connection (default: $IDENTITY_FILE"
-    echo "  {-d} destination-dir     -- Set user for chmod on public folder (default: /tmp/certs)"
+    echo "  {-d} destination-dir     -- Set user for chmod on public folder (default: /etc/mysql/ssl)"
     exit 0
 }
 

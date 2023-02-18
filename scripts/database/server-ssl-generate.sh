@@ -32,6 +32,7 @@ if ! said_yes $CONFIRMED; then
     exit 1
 fi
 
+echo "Generating secure certificates for MariaDB..."
 mkdir -p $HOME_DIRECTORY/certs && cd $HOME_DIRECTORY/certs
 
 openssl genrsa 4096 >ca-key.pem
@@ -50,7 +51,7 @@ openssl x509 -req -in client-req.pem -days 3650 -CA cacert.pem -CAkey ca-key.pem
 # Set certs folder to mysql ownership
 chown -R mysql:mysql $CERTS_DESTINATION
 
-# Restart mysql to apply new certificates
+echo "Restarting mysql to apply new certificates..."
 systemctl restart mysql
 
 echo -e "\n$(green Certificates are installed. Run ssl-copy.sh to place SSL certificates on clients.)\n"
