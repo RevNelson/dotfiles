@@ -54,9 +54,7 @@ export USERTYPE="database-server"
 
 . $DOTBASE/scripts/generic-droplet-provision.sh ${USERNAME} ${USER_PASSWORD} ${SSH_PORT}
 
-echo -e "\n###################################################"
-echo "Performing database server specific provisioning..."
-echo -e "###################################################\n"
+print_section 'Performing database server specific provisioning...'
 
 # Update dotbase for new user
 DOTBASE=$HOME_DIRECTORY/.dotfiles
@@ -96,9 +94,7 @@ apt_quiet update && apt_quiet upgrade -y
 
 su - $USERNAME
 
-echo -e "\n######################################"
-echo "Database server provisioning complete!"
-echo -e "######################################\n"
+print_section 'Database server provisioning complete!'
 
 # Print public keys
 echo "Root public SSH key: "

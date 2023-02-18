@@ -64,9 +64,7 @@ OTHER_PUBLIC_KEYS_TO_ADD=()
 ##
 #
 
-echo -e "\n#######################"
-echo "Provisioning Droplet..."
-echo -e "#######################\n"
+print_section 'Provisioning Droplet...'
 
 HOME_DIRECTORY="/home/${USERNAME}"
 
