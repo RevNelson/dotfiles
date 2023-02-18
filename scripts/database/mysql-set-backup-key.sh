@@ -63,7 +63,7 @@ if [ -f $KEY_PATH ]; then
         echo "Encryption password: "
         read -s ENCRYPTION_PASS
     fi
-    openssl req -x509 -passin pass:$ENCRYPTION_PASS -nodes -key $KEY_PATH -out $DESTINATION -subj "/C=US/ST=CA/L=LA/O=Dis/CN=MariaDB-backup"
+    openssl req -x509 -passin pass:$ENCRYPTION_PASS -nodes -key $KEY_PATH -out $DESTINATION -subj "/C=US/ST=CA/L=LA/O=Dis/CN=MariaDB-backup" >/dev/null 2>&1
     rm $KEY_PATH
 else
     echo "$(red No private key found.)"

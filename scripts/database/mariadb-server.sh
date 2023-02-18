@@ -135,7 +135,7 @@ if [ ! -f $DB_BACKUP_KEY ]; then
 
     if said_yes $NEW_BACKUP_KEY; then
         # Generate and sign encryption certificate
-        openssl genpkey -algorithm RSA -pass pass:$ENCRYPTION_PASS -out $HOME_DIRECTORY/backup.key -pkeyopt rsa_keygen_bits:4096 -aes256
+        openssl genpkey -algorithm RSA -pass pass:$ENCRYPTION_PASS -out $HOME_DIRECTORY/backup.key -pkeyopt rsa_keygen_bits:4096 -aes256 >/dev/null 2>&1
         . $DOTBASE/scripts/database/mysql-set-backup-key.sh -k $DB_BACKUP_KEY
     fi
 else
