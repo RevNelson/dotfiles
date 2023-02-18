@@ -47,5 +47,5 @@ print_section() {
     BLNK=$(echo "$@" | sed 's/./#/g')
     echo -e "\n$(green $BLNK)"
     echo "$(green $@)"
-    echo -e "\n$(green $BLNK)"
+    echo -e "$(green $BLNK)\n"
 }
