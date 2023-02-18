@@ -167,11 +167,11 @@ chmod -R +x $DOTBASE
 # Prepare dotfiles for new user
 echo "Installing dotbase for $USERNAME..."
 export HOME_DIRECTORY=$HOME_DIRECTORY
-sudo -E -u "$USERNAME" sh <<'EOF'
-bash $HOME_DIRECTORY/.dotfiles/install >/dev/null;
-zsh;
-echo 'Sourcing .zshrc ...';
-source $HOME_DIRECTORY/.zshrc >/dev/null 2>&1;
+sudo -E -u "$USERNAME" bash <<'EOF'
+bash $HOME_DIRECTORY/.dotfiles/install >/dev/null
+zsh
+echo 'Sourcing .zshrc ...'
+source $HOME_DIRECTORY/.zshrc >/dev/null 2>&1
 EOF
 
 [[ -z ${USERTYPE:-} ]] && read -p "What type of server is this (webserver, devserver, database-server)? " USERTYPE
