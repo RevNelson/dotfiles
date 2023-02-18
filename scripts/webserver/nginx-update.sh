@@ -29,12 +29,12 @@ NGINX_UPDATE_ABSOLUTE_PATH="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ##
 #
 
+# Source function utils
+. $DOTBASE/functions/utils.sh
+
 # Make sure script is run as root.
 FILENAME=$(basename "$0" .sh)
 run_as_root $FILENAME
-
-# Source function utils
-. $DOTBASE/functions/utils.sh
 
 #
 ##

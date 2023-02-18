@@ -46,12 +46,12 @@ help() {
     exit 0
 }
 
-while getopts 'hi:d:k:' flag; do
-    case "${flag}" in
+while getopts 'hidk:' flag; do
+    case "$flag" in
+    h) help ;;
     i) INPUT_PATH="${OPTARG}" ;;
     d) IFS=: read -a DATABASE_NAMES <<<"$OPTARG" ;;
     k) KEY_PATH="${OPTARG}" ;;
-    h) help ;;
     *)
         usage_info
         exit 1

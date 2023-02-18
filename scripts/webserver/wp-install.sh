@@ -43,12 +43,9 @@ help() {
 # Script Variables #
 ####################
 
-while getopts 'hp:d:l:m:c:' flag; do
-    case $flag in
-    h)
-        help
-        exit 1
-        ;;
+while getopts 'hpdlmc:' flag; do
+    case "$flag" in
+    h) help ;;
     p) PROJECT_PATH="${OPTARG}" ;;
     d) DOMAIN="${OPTARG}" ;;
     l) LOGS_PATH="${OPTARG}" ;;

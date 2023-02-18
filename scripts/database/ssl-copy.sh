@@ -51,11 +51,11 @@ help() {
     exit 0
 }
 
-while getopts 'h:u:p:i:d:' flag; do
-    case "${flag}" in
+while getopts 'hupid:' flag; do
+    case "$flag" in
+    h) DESTINATION_IP="${OPTARG}" ;;
     u) SERVER_USER="${OPTARG}" ;;
     p) SERVER_PORT="${OPTARG}" ;;
-    h) DESTINATION_IP="${OPTARG}" ;;
     i) IDENTITY_FILE="${OPTARG}" ;;
     d) DESTINATION_PATH="${OPTARG}" ;;
     *)

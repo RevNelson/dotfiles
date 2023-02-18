@@ -47,12 +47,12 @@ help() {
     exit 0
 }
 
-while getopts 'hk:o:s:' flag; do
-    case "${flag}" in
+while getopts 'hkos:' flag; do
+    case "$flag" in
+    h) help ;;
     k) KEY_PATH="${OPTARG}" ;;
     o) OUTPUT_NAME="${OPTARG}" ;;
     s) S3_HOST_DB_BACKUP="${OPTARG}" ;;
-    h) help ;;
     *)
         usage_info
         exit 1

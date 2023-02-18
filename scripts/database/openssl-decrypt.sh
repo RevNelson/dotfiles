@@ -40,7 +40,7 @@ usage() {
 help() {
     usage_info
     echo
-    echo "  {-i} input_path           -- Set path to input file (required)."
+    echo "  {-i} input_path          -- Set path to input file (required)."
     echo "  {-o} output_path         -- Set path to output file (required)."
     echo "  {-k} key_path            -- Set path to private key (default $KEY_PATH)"
     echo -e "\n Make sure to create a file with private key before running this script."
@@ -48,12 +48,12 @@ help() {
     exit 0
 }
 
-while getopts 'hi:o:k:' flag; do
-    case "${flag}" in
-    f) FILE_PATH="${OPTARG}" ;;
+while getopts 'hiok:' flag; do
+    case "$flag" in
+    h) help ;;
+    i) FILE_PATH="${OPTARG}" ;;
     o) OUTPUT_PATH="${OPTARG}" ;;
     k) KEY_PATH="${OPTARG}" ;;
-    h) help ;;
     *)
         usage_info
         exit 1

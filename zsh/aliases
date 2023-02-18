@@ -24,6 +24,7 @@ if [ "$USERTYPE" = "webserver" ] || [ "$USERTYPE" = "devserver" ]; then
     alias nginx-add-block='sudo ~/.dotfiles/scripts/webserver/nginx-add-block.sh'
     alias php-update-overrides='sudo ~/.dotfiles/scripts/webserver/php-update-overrides.sh'
     alias db-update='sudo ~/.dotfiles/scripts/webserver/mariadb-client.sh'
+    alias install-ssl='sudo ~/.dotfiles/scripts/webserver/install-ssl-certs.sh'
     alias wp='sudo -u www-data -- wp'
 fi
 

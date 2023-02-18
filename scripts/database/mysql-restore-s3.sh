@@ -47,13 +47,13 @@ help() {
     exit 0
 }
 
-while getopts 'hb:d:k:s:' flag; do
-    case "${flag}" in
+while getopts 'hbdks:' flag; do
+    case "$flag" in
+    h) help ;;
     b) BACKUP_DATE="${OPTARG}" ;;
     d) DATABASE_NAMES="${OPTARG}" ;;
     k) KEY_PATH="${OPTARG}" ;;
     s) S3_HOST_DB_BACKUP="${OPTARG}" ;;
-    h) help ;;
     *)
         usage_info
         exit 1
