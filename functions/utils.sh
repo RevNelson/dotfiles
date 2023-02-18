@@ -12,7 +12,7 @@ said_yes() {
 }
 
 apt_quiet() {
-    yes | DEBIAN_FRONTEND=noninteractive apt-get -yqq purge "$@" >/dev/null
+    yes | DEBIAN_FRONTEND=noninteractive apt-get -yqq "$@" >/dev/null
 }
 
 # Load colors
