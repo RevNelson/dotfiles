@@ -10,8 +10,7 @@
 ##
 #
 
-echo "Private IP (this droplet): "
-read -s PRIVATE_IP
+read -p "Private IP (this droplet): " PRIVATE_IP
 [[ -z ${PRIVATE_IP} ]] && {
     echo "Must provide the private IP of this droplet."
     exit 1
@@ -71,6 +70,7 @@ fi
 echo "Installing MariaDB Client..."
 
 apt_quiet install wget software-properties-common -y
+
 if ! cmd_exists mysql; then
     wget -q https://downloads.mariadb.com/MariaDB/mariadb_repo_setup
 
