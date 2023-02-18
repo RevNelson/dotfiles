@@ -91,7 +91,7 @@ sed -e 's/\s*\([\+0-9a-zA-Z]*\).*/\1/' <<EOF | mysql_secure_installation
     y # Disallow root login remotely?
     y # Remove test database and access to it?
     y # Reload privilege tables now?
-EOF
+EOF >/dev/null 2>&1
 
 echo "Adding server config file for SSL..."
 SSL_CONF_FILE="$DOTBASE/scripts/database/mariadb-server.cnf"
@@ -126,8 +126,13 @@ chmod 600 /etc/mysql/mariadb.conf.d/backup.cnf
 
 DB_BACKUP_KEY="$HOME_DIRECTORY/backup.key"
 if [ ! -f $DB_BACKUP_KEY ]; then
-    echo "Do you want to generate a new encryption key for backups?"
-    read -p "If not, you will need to run $(green mysql-backup-key) after provisioning. [y/n] " NEW_BACKUP_KEY
+    if [ said_yes $PROVISION_DROPLET ]; then
+        echo "Do you want to generate a new encryption key for backups?"
+        read -p "If not, you will need to run $(green mysql-backup-key) after provisioning. [y/n] " NEW_BACKUP_KEY
+    else
+        NEW_BACKUP_KEY=yes
+    fi
+
     if said_yes $NEW_BACKUP_KEY; then
         # Generate and sign encryption certificate
         openssl genpkey -algorithm RSA -pass pass:$ENCRYPTION_PASS -out $HOME_DIRECTORY/backup.key -pkeyopt rsa_keygen_bits:4096 -aes256

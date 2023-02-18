@@ -46,12 +46,12 @@ done
 apt_quiet install python-setuptools
 
 cd /tmp
-wget $(curl -s https://api.github.com/repos/s3tools/s3cmd/releases/latest | grep 'browser_' | cut -d\" -f4)
+wget $(curl -s https://api.github.com/repos/s3tools/s3cmd/releases/latest | grep 'browser_' | cut -d\" -f4) >/dev/null 2>&1
 
 cd $HOME_DIRECTORY
-tar xf /tmp/s3cmd-*.tar.gz
+tar xf /tmp/s3cmd-*.tar.gz >/dev/null 2>&1
 cd s3cmd-*
-python3 setup.py install
+python3 setup.py install >/dev/null 2>&1
 
 # Clean up
 cd $HOME_DIRECTORY

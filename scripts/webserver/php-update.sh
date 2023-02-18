@@ -90,3 +90,5 @@ fi
 echo "Restarting PHP..."
 
 systemctl restart php8.1-fpm
+
+echo "PHP is configured."

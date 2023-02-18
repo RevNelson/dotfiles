@@ -80,14 +80,14 @@ if [ ! -f $ROOT_SSH_KEY ]; then
     ssh-keygen -t ed25519 -N "" -C "root@${HOST}" -f $ROOT_SSH_KEY >/dev/null
 fi
 
+########
+# User #
+########
+
 # Add sudo user and grant privileges
 if ! id -u "$USERNAME" >/dev/null; then
     echo "Creating new user: $USERNAME ..."
     useradd -m -p $USER_PASSWORD -s "/bin/zsh" --groups sudo $USERNAME
-
-    #######
-    # SSH #
-    #######
 
     # Create SSH directory for new user
     mkdir -p $HOME_DIRECTORY/.ssh
@@ -142,11 +142,15 @@ else
     passwd --delete $USERNAME >/dev/null
 fi
 
+#######
+# SSH #
+#######
+
 # Change SSH port
 sed -i "/^#Port/a Port ${SSH_PORT}" /etc/ssh/sshd_config
 service ssh restart
 
-echo "SSH has been set to use port ${SSH_PORT}"
+echo "$(magenta SSH has been set to use port) $(blue ${SSH_PORT})"
 
 ###########
 # Dotbase #
@@ -167,7 +171,7 @@ $HOME_DIRECTORY/.dotfiles/install >/dev/null
 zsh
 echo "Sourcing .zshrc ..."
 source $HOME_DIRECTORY/.zshrc >/dev/null
-EOF
+EOF  >/dev/null
 
 [[ -z ${USERTYPE:-} ]] && read -p "What type of server is this (webserver, devserver, database-server)? " USERTYPE
 # Make usertype.sh
