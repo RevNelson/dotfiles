@@ -37,12 +37,8 @@ read -s ENCRYPTION_PASS
 [[ -z ${HOME_DIRECTORY:-} ]] && HOME_DIRECTORY=$(getent passwd ${SUDO_USER:-$USER} | cut -d: -f6)
 [[ -z ${DOTBASE:-} ]] && DOTBASE=$HOME_DIRECTORY/.dotfiles
 
-# Set MariaDB bind address if given
-if [ $# -lt 1 ]; then
-    [[ -z ${PRIVATE_IP:-} ]] && PRIVATE_IP="0.0.0.0"
-else
-    PRIVATE_IP=$1
-fi
+# Check for MariaDB bind address and set it if not found
+[[ -z ${PRIVATE_IP:-} ]] && PRIVATE_IP="0.0.0.0"
 
 #
 ##
