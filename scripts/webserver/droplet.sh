@@ -109,6 +109,7 @@ echo "Installing PHP..."
 ###############
 
 NVM_VERSION="0.39.3"
+export NVM_DIR=$HOME_DIRECTORY/.nvm
 NVM_URL=https://raw.githubusercontent.com/nvm-sh/nvm/v${NVM_VERSION}/install.sh
 echo "Installing NVM v$NVM_VERSION..."
 mkdir -p $NVM_DIR
@@ -120,7 +121,6 @@ apt_quiet install build-essential
 echo "Installing latest LTS node version..."
 echo "\n$(magenta 'This may take a long time if it needs to be compiled.')"
 
-export NVM_DIR=$HOME_DIRECTORY/.nvm
 sudo -E -H -u "$USERNAME" bash <<'EOF'
 \. "$NVM_DIR/nvm.sh"
 nvm install --lts >/dev/null
