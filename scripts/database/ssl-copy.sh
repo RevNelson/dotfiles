@@ -59,7 +59,7 @@ while getopts 'h:u:p:i:d:' flag; do
     d) DESTINATION_PATH="${OPTARG}" ;;
     *)
         help
-        exit 0
+        exit 1
         ;;
     esac
 done
