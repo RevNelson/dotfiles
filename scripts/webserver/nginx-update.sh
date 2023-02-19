@@ -75,7 +75,7 @@ echo "Adding optimized Nginx configs..."
 \cp -r $NGINX_TEMPLATE_SITES $NGINX_FOLDER/
 
 # Remove links from sites-enabled
-rm -rf $NGINX_FOLDER/sites-enable/{*,.*}
+rm -rf $NGINX_FOLDER/sites-enabled/*
 
 # Link default server block
 ln -s $NGINX_FOLDER/sites-available/default $NGINX_FOLDER/sites-enabled/
