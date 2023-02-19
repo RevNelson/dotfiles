@@ -120,7 +120,7 @@ echo "Installing required build dependencies..."
 apt_quiet install build-essential
 
 echo "Installing latest LTS node version..."
-echo "\n$(magenta 'This may take a long time if it needs to be compiled.')"
+echo "$(magenta 'This may take a long time if it needs to be compiled.')"
 
 sudo -E -H -u "$USERNAME" bash <<'EOF'
 \. "$NVM_DIR/nvm.sh"
