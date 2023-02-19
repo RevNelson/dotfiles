@@ -109,19 +109,25 @@ echo "Installing PHP..."
 ###############
 
 NVM_VERSION="0.39.3"
-
+NVM_URL=https://raw.githubusercontent.com/nvm-sh/nvm/v${NVM_VERSION}/install.sh
 echo "Installing NVM v$NVM_VERSION..."
-curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v${NVM_VERSION}/install.sh >/dev/null | bash >/dev/null
+mkdir -p $NVM_DIR
+curl -s -o- $NVM_URL | NVM_DIR=$HOME_DIRECTORY/.nvm bash >/dev/null
 
 echo "Installing required build dependencies..."
 apt_quiet install build-essential
 
 echo "Installing latest LTS node version..."
 echo "\n$(magenta 'This may take a long time if it needs to be compiled.')"
-nvm install --lts
 
+export NVM_DIR=$HOME_DIRECTORY/.nvm
+sudo -E -H -u "$USERNAME" bash <<'EOF'
+\. "$NVM_DIR/nvm.sh"
+nvm install --lts >/dev/null
+nvm use node
 echo "Installing global node packages..."
-npm install -g yarn encoding
+npm install -g yarn encoding >/dev/null
+EOF
 
 ##################
 # Install WP-CLI #

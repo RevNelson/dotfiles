@@ -173,7 +173,6 @@ zsh
 echo 'Sourcing .zshrc ...'
 source $HOME_DIRECTORY/.zshrc >/dev/null 2>&1
 EOF
-echo "done"
 
 [[ -z ${USERTYPE:-} ]] && read -p "What type of server is this (webserver, devserver, database-server)? " USERTYPE
 # Make usertype.sh
