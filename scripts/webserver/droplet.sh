@@ -114,6 +114,7 @@ NVM_URL=https://raw.githubusercontent.com/nvm-sh/nvm/v${NVM_VERSION}/install.sh
 echo "Installing NVM v$NVM_VERSION..."
 mkdir -p $NVM_DIR
 curl -s -o- $NVM_URL | NVM_DIR=$HOME_DIRECTORY/.nvm bash >/dev/null
+chown -R $USERNAME:$USERNAME $NVM_DIR
 
 echo "Installing required build dependencies..."
 apt_quiet install build-essential
