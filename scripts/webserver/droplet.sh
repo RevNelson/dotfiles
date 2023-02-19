@@ -127,7 +127,7 @@ sudo -E -H -u "$USERNAME" bash <<'EOF'
 nvm install --lts >/dev/null
 nvm use node
 echo "Installing global node packages..."
-npm install -g yarn encoding >/dev/null
+npm install -g npm yarn encoding >/dev/null
 EOF
 
 ##################
