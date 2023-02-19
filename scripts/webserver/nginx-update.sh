@@ -57,28 +57,28 @@ if ! cmd_exists nginx; then
     apt_quiet install nginx-full certbot python3-certbot-nginx 2>&1
     ufw allow "Nginx Full" >/dev/null
 
-    echo "Backing up default Nginx configs..."
-    # Backup Nginx configs
-    NGINX_FOLDER_BACKUP=$NGINX_FOLDER/backup/
-    if [[ ! -f $NGINX_FOLDER_BACKUP ]]; then
-        mkdir $NGINX_FOLDER_BACKUP
-        cp $NGINX_TEMPLATE_MIME_TYPE $NGINX_FOLDER_BACKUP
-        cp $NGINX_TEMPLATE_CONFIG $NGINX_FOLDER_BACKUP
-        cp -r $NGINX_TEMPLATE_SITES $NGINX_FOLDER_BACKUP
-    fi
+    # echo "Backing up default Nginx configs..."
+    # # Backup Nginx configs
+    # NGINX_FOLDER_BACKUP=$NGINX_FOLDER/backup/
+    # if [[ ! -f $NGINX_FOLDER_BACKUP ]]; then
+    #     mkdir $NGINX_FOLDER_BACKUP
+    #     # cp $NGINX_FOLDER/mime.types $NGINX_FOLDER_BACKUP
+    #     # cp $NGINX_FOLDER/nginx.conf $NGINX_FOLDER_BACKUP
+    #     cp -r $NGINX_FOLDER/sites-available $NGINX_FOLDER_BACKUP
+    # fi
 fi
 
-echo "Adding optimized Nginx configs..."
+echo "Adding example Nginx site configs..."
 # Copy config templates (escape cp to overwrite without prompt)
-\cp $NGINX_TEMPLATE_MIME_TYPE $NGINX_FOLDER/
-\cp $NGINX_TEMPLATE_CONFIG $NGINX_FOLDER/
-\cp -r $NGINX_TEMPLATE_SITES $NGINX_FOLDER/
+# \cp $NGINX_TEMPLATE_MIME_TYPE $NGINX_FOLDER/
+# \cp $NGINX_TEMPLATE_CONFIG $NGINX_FOLDER/
+\cp -r $NGINX_TEMPLATE_SITES/* $NGINX_FOLDER/sites-available/
 
-# Remove links from sites-enabled
-rm -rf $NGINX_FOLDER/sites-enabled/*
+# # Remove links from sites-enabled
+# rm -rf $NGINX_FOLDER/sites-enabled/*
 
-# Link default server block
-ln -s $NGINX_FOLDER/sites-available/default $NGINX_FOLDER/sites-enabled/
+# # Link default server block
+# ln -s $NGINX_FOLDER/sites-available/default $NGINX_FOLDER/sites-enabled/
 
 # Add dynamic config
 # CPU_COUNT="$(grep processor /proc/cpuinfo | wc -l)"
