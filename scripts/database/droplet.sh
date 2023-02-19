@@ -90,9 +90,7 @@ echo "${WEBSERVER_IP} webserver" >>/etc/hosts
 . $DOTBASE/scripts/database/s3cmd-install.sh
 
 echo "Performing final package updates..."
-apt_quiet update && apt_quiet upgrade -y
-
-su - $USERNAME
+apt_quiet update && apt_quiet upgrade && apt_quiet autoremove
 
 print_section 'Database server provisioning complete!'
 
@@ -108,6 +106,8 @@ echo -e "\nRun ssl-copy.sh to place SSL certificates on clients."
 
 # Show help for ssl-copy
 $DOTBASE/scripts/database/ssl-copy.sh
+
+su - $USERNAME
 
 # TODO Setup droplet to use DO Spaces
 # TODO Add cron job for adding encrypted backups to Spaces

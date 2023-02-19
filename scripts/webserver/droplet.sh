@@ -152,9 +152,7 @@ php /tmp/composer-setup.php --install-dir=/usr/local/bin --filename=composer >/d
 #########################################################
 
 echo "Performing final package updates..."
-apt_quiet update && apt_quiet upgrade
-
-su - $USERNAME
+apt_quiet update && apt_quiet upgrade && apt_quiet autoremove
 
 print_section 'Webserver provisioning complete!'
 
@@ -168,7 +166,6 @@ echo -e "\n--------------------------------\n"
 echo -e "\nAdd SSH to github."
 echo -e "\nRun wp-install.sh for each wordpress project."
 
-# Show help for wp-install
-$DOTBASE/scripts/webserver/wp-install.sh -h
+su - $USERNAME
 
 # TODO Setup droplet to use DO Spaces
