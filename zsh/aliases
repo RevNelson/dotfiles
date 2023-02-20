@@ -27,6 +27,9 @@ if [ "$USERTYPE" = "webserver" ] || [ "$USERTYPE" = "devserver" ]; then
     alias install-ssl='sudo ~/.dotfiles/scripts/webserver/install-ssl-certs.sh'
     alias fix-permissions='sudo ~/.dotfiles/scripts/webserver/fix-permissions.sh'
     alias wp='sudo -u www-data -- wp'
+    alias ngt='sudo nginx -t'
+    alias ngr='sudo service nginx restart'
+    alias phpr='sudo service php8.0-fpm restart; sudo service php8.1-fpm restart; sudo service php8.2-fpm restart'
 fi
 
 if [ "$USERTYPE" = "database-server" ]; then
