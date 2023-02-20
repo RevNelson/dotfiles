@@ -103,7 +103,7 @@ done
 ##
 #
 
-cd $HOME_DIRECTORY/sites/$SITE_NAME
+cd /sites/$SITE_NAME
 
 chown -R www-data logs
 chown -R $USERNAME files

@@ -18,14 +18,14 @@ if [ -f $USERTYPE_FILE ]; then
 fi
 
 if [ "$USERTYPE" = "webserver" ] || [ "$USERTYPE" = "devserver" ]; then
-    alias wp-install='sudo ~/.dotfiles/scripts/webserver/wp-install.sh'
-    alias wp-update-salts='sudo ~/.dotfiles/scripts/webserver/wp-update-salts.sh'
-    alias nginx-update='sudo ~/.dotfiles/scripts/webserver/nginx-update.sh'
-    alias nginx-add-block='sudo ~/.dotfiles/scripts/webserver/nginx-add-block.sh'
-    alias php-update-overrides='sudo ~/.dotfiles/scripts/webserver/php-update-overrides.sh'
-    alias db-update='sudo ~/.dotfiles/scripts/webserver/mariadb-client.sh'
-    alias install-ssl='sudo ~/.dotfiles/scripts/webserver/install-ssl-certs.sh'
-    alias fix-permissions='sudo ~/.dotfiles/scripts/webserver/fix-permissions.sh'
+    alias wp-install='sudo bash ~/.dotfiles/scripts/webserver/wp-install.sh'
+    alias wp-update-salts='sudo bash ~/.dotfiles/scripts/webserver/wp-update-salts.sh'
+    alias nginx-update='sudo bash ~/.dotfiles/scripts/webserver/nginx-update.sh'
+    alias nginx-add-block='sudo bash ~/.dotfiles/scripts/webserver/nginx-add-block.sh'
+    alias php-update-overrides='sudo bash ~/.dotfiles/scripts/webserver/php-update-overrides.sh'
+    alias db-update='sudo bash ~/.dotfiles/scripts/webserver/mariadb-client.sh'
+    alias install-ssl='sudo bash ~/.dotfiles/scripts/webserver/install-ssl-certs.sh'
+    alias fix-permissions='sudo bash ~/.dotfiles/scripts/webserver/fix-permissions.sh'
     alias wp='sudo -u www-data -- wp'
     alias ngt='sudo nginx -t'
     alias ngr='sudo service nginx restart'
@@ -33,16 +33,16 @@ if [ "$USERTYPE" = "webserver" ] || [ "$USERTYPE" = "devserver" ]; then
 fi
 
 if [ "$USERTYPE" = "database-server" ]; then
-    alias ssl-update='sudo ~/.dotfiles/scripts/database/server-ssl-generate.sh'
-    alias ssl-copy='sudo ~/.dotfiles/scripts/database/ssl-copy.sh'
-    alias db-update='sudo ~/.dotfiles/scripts/database/mariadb-server.sh'
-    alias mysql-add-user='sudo ~/.dotfiles/scripts/database/mysql-add-user.sh -s'
-    alias mysql-backup='sudo ~/.dotfiles/scripts/database/mysql-backup.sh'
-    alias mysql-backup-s3='sudo ~/.dotfiles/scripts/database/mysql-backup-s3.sh'
-    alias mysql-restore='sudo ~/.dotfiles/scripts/database/mysql-restore.sh'
-    alias mysql-restore-s3='sudo ~/.dotfiles/scripts/database/mysql-restore-s3.sh'
-    alias mysql-set-backup-key='sudo ~/.dotfiles/scripts/database/mysql-set-backup-key.sh'
-    alias s3cmd-update='sudo ~/.dotfiles/scripts/database/s3cmd-install.sh'
+    alias ssl-update='sudo bash ~/.dotfiles/scripts/database/server-ssl-generate.sh'
+    alias ssl-copy='sudo bash ~/.dotfiles/scripts/database/ssl-copy.sh'
+    alias db-update='sudo bash ~/.dotfiles/scripts/database/mariadb-server.sh'
+    alias mysql-add-user='sudo bash ~/.dotfiles/scripts/database/mysql-add-user.sh -s'
+    alias mysql-backup='sudo bash ~/.dotfiles/scripts/database/mysql-backup.sh'
+    alias mysql-backup-s3='sudo bash ~/.dotfiles/scripts/database/mysql-backup-s3.sh'
+    alias mysql-restore='sudo bash ~/.dotfiles/scripts/database/mysql-restore.sh'
+    alias mysql-restore-s3='sudo bash ~/.dotfiles/scripts/database/mysql-restore-s3.sh'
+    alias mysql-set-backup-key='sudo bash ~/.dotfiles/scripts/database/mysql-set-backup-key.sh'
+    alias s3cmd-update='sudo bash ~/.dotfiles/scripts/database/s3cmd-install.sh'
 fi
 
 if cmd_exists brew; then
