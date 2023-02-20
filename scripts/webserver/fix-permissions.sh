@@ -41,8 +41,8 @@ run_as_root $FILENAME
 
 usage_info() {
     BLNK=$(echo "$FILENAME" | sed 's/./ /g')
-    echo "Usage: $FILENAME [{-s} site-name] \\"
-    echo -e "\n        e.g. $(magenta sudo ./$FILENAME -s api.example.com)"
+    echo "Usage: $FILENAME [{-s} site-name] [{-w} wordpress] \\"
+    echo -e "\n        e.g. $(magenta sudo ./$FILENAME -s api.example.com -w)"
 
 }
 
@@ -61,6 +61,7 @@ help() {
     usage_info
     echo
     echo "  {-s} site-name     -- Site name to apply permission fix to."
+    echo "  {-w} wordpress     -- (flag only) Add wordpress permission fixes."
     exit 0
 }
 
@@ -74,9 +75,10 @@ help() {
 ##
 #
 
-while getopts 'hs:d:' flag; do
+while getopts 'hws:' flag; do
     case "$flag" in
     h) help ;;
+    w) WORDPRESS="true" ;;
     s) SITE_NAME="${OPTARG}" ;;
     *)
         usage_info
@@ -101,8 +103,11 @@ done
 ##
 #
 
-cd $HOME_DIRECTORY/sites/$SITE_NAME/files
+cd $HOME_DIRECTORY/sites/$SITE_NAME
 
-chown -R $USERNAME public
-chmod -R 755 public
-chown -R www-data public/content/uploads
+chown -R www-data logs
+chown -R $USERNAME files
+
+if [[ "$WORDPRESS" ]]; then
+    chown -R www-data files/public/content/uploads
+fi
