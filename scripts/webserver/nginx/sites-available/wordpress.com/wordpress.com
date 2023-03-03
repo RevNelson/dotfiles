@@ -1,13 +1,13 @@
 # Uncomment for fastcgi caching
-# fastcgi_cache_path /sites/example.com/cache levels=1:2 keys_zone=example.com:100m inactive=1d;
+# fastcgi_cache_path /sites/wordpress.com/cache levels=1:2 keys_zone=wordpress.com:100m inactive=1d;
 
 server {
-    server_name example.com;
+    server_name wordpress.com;
 
-    root /sites/example.com/files/public/;
+    root /sites/wordpress.com/files/public/;
 
-    access_log /sites/example.com/logs/access.log;
-    error_log /sites/example.com/logs/error.log;
+    access_log /sites/wordpress.com/logs/access.log;
+    error_log /sites/wordpress.com/logs/error.log;
 
     index index.html index.php;
 
@@ -23,7 +23,7 @@ server {
     # Tell browsers to transparently upgrade HTTP resources to HTTPS
     add_header 'Content-Security-Policy' 'upgrade-insecure-requests';
 
-    include sites-available/example.com/server/*;
+    include sites-available/wordpress.com/server/*;
 
     # Prevent access to hidden files
     location ~* /\.(?!well-known\/) {
@@ -46,8 +46,9 @@ server {
         fastcgi_pass unix:/run/php/php8.2-fpm.sock;
 
         # Uncomment when using fastcgi-cache
-        # include sites-available/example.com/location/*;
+        # include sites-available/wordpress.com/location/*;
     }
 
     listen 80;
+    listen [::]:80;
 }

@@ -5,11 +5,11 @@ server {
     error_log /sites/frontend/nextjs.com/logs/error.log;
 
     index index.html index.htm;
-    root /sites/frontend/nextjs.com/next/public/;
+    root /sites/frontend/nextjs.com/files/public/;
 
     # Serve any static assets with NGINX
     location /_next/static {
-        alias /sites/frontend/nextjs.com/next/.next/static;
+        alias /sites/frontend/nextjs.com/files/.next/static;
         add_header Cache-Control "public, max-age=3600, immutable";
     }
 
@@ -35,5 +35,6 @@ server {
     }
 
     listen 80; # run Certbot for SSL and redirect
+    listen [::]:80;
 
 }
