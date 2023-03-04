@@ -170,3 +170,5 @@ SSH_PORT_PATH=$HOME_DIRECTORY/.config/ssh-port.sh
 cat >${SSH_PORT_PATH} <<EOF
 export SSH_PORT=${SSH_PORT}
 EOF
+
+su - $USERNAME
