@@ -42,7 +42,7 @@ if [ "$USERTYPE" = "database-server" ]; then
     alias mysql-restore='sudo bash ~/.dotfiles/scripts/database/mysql-restore.sh'
     alias mysql-restore-s3='sudo bash ~/.dotfiles/scripts/database/mysql-restore-s3.sh'
     alias mysql-set-backup-key='sudo bash ~/.dotfiles/scripts/database/mysql-set-backup-key.sh'
-    alias s3cmd-update='sudo bash ~/.dotfiles/scripts/database/s3cmd-install.sh'
+    alias s3cmd-update='sudo bash ~/.dotfiles/scripts/s3cmd/install.sh'
 fi
 
 if cmd_exists brew; then

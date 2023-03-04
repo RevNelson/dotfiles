@@ -87,7 +87,7 @@ echo "${WEBSERVER_IP} webserver" >>/etc/hosts
 # DO Spaces #
 #############
 
-. $DOTBASE/scripts/database/s3cmd-install.sh
+. $DOTBASE/scripts/s3cmd/install.sh
 
 echo "Performing final package updates..."
 apt_quiet update && apt_quiet upgrade && apt_quiet autoremove
