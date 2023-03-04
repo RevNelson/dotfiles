@@ -64,10 +64,7 @@ help() {
 
 while getopts 'hk:s:e:c:' flag; do
     case $flag in
-    h)
-        usage_info
-        exit 1
-        ;;
+    h) help ;;
     k) ACCESS_KEY="${OPTARG}" ;;
     s) ACCESS_SECRET="${OPTARG}" ;;
     e) ENCRYPTION_PASSWORD="${OPTARG}" ;;
