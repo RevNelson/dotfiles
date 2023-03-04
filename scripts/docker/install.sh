@@ -42,12 +42,20 @@ run_as_root $FILENAME
 ##
 #
 
+print_section 'Installing Docker...'
+
+echo "Updating apt sources..."
 apt_quiet update
 
+echo "Installing dependencies..."
 apt_quiet install apt-transport-https ca-certificates curl gnupg lsb-release software-properties-common
 
-mkdir -m 0755 -p /etc/apt/keyrings
-curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+echo "Adding docker signed keys to apt..."
+KEYRINGS_DIR=/etc/apt/keyrings
+KEY_FILENAME=$KEYRINGS_DIR/docker.gpg
+mkdir -m 0755 -p $KEYRINGS_DIR
+rm -f $KEY_FILENAME
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o $KEY_FILENAME
 
 echo \
     "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
@@ -55,6 +63,8 @@ echo \
 
 apt_quiet update
 
+echo "Installing docker..."
 apt_quiet install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 
+echo "Setting docker to be run without root by ${USERNAME}..."
 usermod -aG docker ${USERNAME}
