@@ -68,3 +68,5 @@ apt_quiet install docker-ce docker-ce-cli containerd.io docker-buildx-plugin doc
 
 echo "Setting docker to be run without root by ${USERNAME}..."
 usermod -aG docker ${USERNAME}
+
+echo "$(green Docker is now installed.)"
