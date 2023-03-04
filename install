@@ -37,13 +37,13 @@ fi
 chmod -R +x $DOTBASE/scripts
 chmod -R +x $DOTBASE/functions
 
-OS="$(uname -s)"
+# OS="$(uname -s)"
 
-if [ "$OS" = "Linux" ]; then
-    . $DOTBASE/scripts/provision-linux.sh
-elif [ "$OS" = "Darwin" ]; then
-    . $DOTBASE/scripts/provision-macos.sh
-fi
+# if [ "$OS" = "Linux" ]; then
+#     . $DOTBASE/scripts/provision-linux.sh
+# elif [ "$OS" = "Darwin" ]; then
+#     . $DOTBASE/scripts/provision-macos.sh
+# fi
 
 # Check for USERNAME and set it if not found
 [[ -z ${USERNAME:-} ]] && USERNAME=${SUDO_USER:-$USER}
