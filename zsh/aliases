@@ -45,7 +45,10 @@ if [ "$USERTYPE" = "database-server" ]; then
     alias s3cmd-update='sudo bash ~/.dotfiles/scripts/s3cmd/install.sh'
 fi
 
+if cmd_exists docker; then
+    alias dstats='bash ~/.dotfiles/scripts/docker/stats.sh'
 fi
+
 if cmd_exists brew; then
     alias b=brew
 fi
