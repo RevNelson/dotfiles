@@ -237,7 +237,9 @@ npx() {
     npx $@
 }
 
-nvm use 18
+if cmd_exists nvm; then
+    nvm use 18
+fi
 
 ########
 # TMUX #
