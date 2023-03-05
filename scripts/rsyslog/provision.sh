@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# Credit: https://techroads.org/docker-logging-to-the-local-os-that-works-with-compose-and-rsyslog/
+
 #
 ##
 ###
