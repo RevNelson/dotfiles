@@ -64,7 +64,7 @@ else
   echo "$TEMPLATE_PATH already exists."
 fi
 
-if [ ! -d "$LOG_DIRECTORY"]; then
+if [ ! -d "$LOG_DIRECTORY" ]; then
   echo "Creating $LOG_DIRECTORY and setting permissions..."
   mkdir -p $LOG_DIRECTORY
   chown -R syslog:adm $LOG_DIRECTORY
