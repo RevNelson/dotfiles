@@ -36,6 +36,9 @@ export VISUAL="$EDITOR"
 # Functions #
 #############
 
+[[ -f $ZSH_DIR/aliases.zsh ]] && source $ZSH_DIR/aliases.zsh
+[[ -f $ZSH_DIR/functions.zsh ]] && source $ZSH_DIR/functions.zsh
+[[ -f $ZSH_DIR/starship.zsh ]] && source $ZSH_DIR/starship.zsh
 # add ~/.my_zsh_functions to fpath, and then lazy autoload
 # every file in there as a function
 fpath=($DOTBASE/functions/autoload $fpath)
@@ -207,40 +210,40 @@ bindkey '^Z' ctrl-z-toggle
 #######
 # NVM #
 #######
+[[ -f $ZSH_DIR/nvm.zsh ]] && source $ZSH_DIR/nvm.zsh
+# if cmd_exists nvm; then
 
-if cmd_exists nvm; then
+#     lazynvm() {
+#         unset -f nvm node npm npx
+#         export NVM_DIR=~/.nvm
+#         [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh" # This loads nvm
+#         if [ -f "$NVM_DIR/bash_completion" ]; then
+#             [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion" # This loads nvm bash_completion
+#         fi
+#     }
 
-    lazynvm() {
-        unset -f nvm node npm npx
-        export NVM_DIR=~/.nvm
-        [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh" # This loads nvm
-        if [ -f "$NVM_DIR/bash_completion" ]; then
-            [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion" # This loads nvm bash_completion
-        fi
-    }
+#     nvm() {
+#         lazynvm
+#         nvm $@
+#     }
 
-    nvm() {
-        lazynvm
-        nvm $@
-    }
+#     node() {
+#         lazynvm
+#         node $@
+#     }
 
-    node() {
-        lazynvm
-        node $@
-    }
+#     npm() {
+#         lazynvm
+#         npm $@
+#     }
 
-    npm() {
-        lazynvm
-        npm $@
-    }
+#     npx() {
+#         lazynvm
+#         npx $@
+#     }
 
-    npx() {
-        lazynvm
-        npx $@
-    }
-
-    nvm use 18
-fi
+#     nvm use 18
+# fi
 
 ########
 # TMUX #

@@ -1,6 +1,15 @@
 alias dc=docker-compose
 alias edit='nano'
 
+# Containers
+alias k="kubectl"
+alias m="minikube"
+alias h="helm"
+alias tf="terraform"
+alias a="ansible"
+alias ap="ansible-playbook"
+alias dt="datree"
+
 # Dot files
 alias ez='edit ~/.dotfiles/zshrc'
 alias ea='edit ~/.dotfiles/zsh/aliases'
@@ -26,6 +35,7 @@ if [ "$USERTYPE" = "webserver" ] || [ "$USERTYPE" = "devserver" ]; then
     alias db-update='sudo bash ~/.dotfiles/scripts/webserver/mariadb-client.sh'
     alias install-ssl='sudo bash ~/.dotfiles/scripts/webserver/install-ssl-certs.sh'
     alias fix-permissions='sudo bash ~/.dotfiles/scripts/webserver/fix-permissions.sh'
+    alias add-site='sudo bash ~/.dotfiles/scripts/webserver/add-site.sh'
     alias wp='sudo -u www-data -- wp'
     alias ngt='sudo nginx -t'
     alias ngr='sudo service nginx restart'
