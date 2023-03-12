@@ -3,7 +3,7 @@ LFILE="/etc/*-release"
 MFILE="/System/Library/CoreServices/SystemVersion.plist"
 if [[ -f $LFILE ]]; then
   _distro=$(awk '/^ID=/' /etc/*-release | awk -F'=' '{ print tolower($2) }')
-  DEVICE=""
+  DEVICE=""
 elif [[ -f $MFILE ]]; then
   _distro="macos"
 
@@ -12,9 +12,12 @@ elif [[ -f $MFILE ]]; then
 
   case $_device in
   *MacBook*) DEVICE="" ;;
-  *mini*) DEVICE="󰇄" ;;
+  *mini*) DEVICE="" ;;
   *) DEVICE="" ;;
   esac
+else
+  _distro=$(awk '/^ID=/' /etc/*-release | awk -F'=' '{ print tolower($2) }')
+  DEVICE=""
 fi
 
 # set an icon based on the distro
