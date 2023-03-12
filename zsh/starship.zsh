@@ -12,7 +12,7 @@ elif [[ -f $MFILE ]]; then
   case $_device in
   *MacBook*) DEVICE="" ;;
   *mini*) DEVICE="󰇄" ;;
-  *) DEVICE="" ;;
+  *) DEVICE="" ;;
   esac
 fi
 
