@@ -209,7 +209,11 @@ bindkey '^Z' ctrl-z-toggle
 #######
 # NVM #
 #######
-[[ -f $ZSH_DIR/nvm.zsh ]] && source $ZSH_DIR/nvm.zsh
+
+if [[ -f $ZSH_DIR/nvm.zsh ]]; then
+    # source $ZSH_DIR/nvm.zsh
+    nvm use node
+fi
 
 ########
 # TMUX #
