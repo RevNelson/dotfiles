@@ -28,10 +28,6 @@
 # Source function utils
 . $DOTBASE/functions/utils.sh
 
-# Make sure script is run as root.
-FILENAME=$(basename "$0" .sh)
-run_as_root $FILENAME
-
 #
 ##
 ###
@@ -42,7 +38,7 @@ run_as_root $FILENAME
 ##
 #
 
-print_section 'Installing Docker...'
+print_section 'Installing NVM...'
 
 echo "Updating apt sources..."
 apt_quiet update
@@ -61,10 +57,10 @@ apt_quiet install build-essential
 echo "Installing latest LTS node version..."
 echo "$(magenta 'This may take a long time if it needs to be compiled.')"
 
-sudo -E -H -u "$USERNAME" bash <<'EOF'
-\. "$NVM_DIR/nvm.sh"
-nvm install --lts >/dev/null
-nvm use node
-echo "Installing global node packages..."
-npm install -g npm yarn uuid pm2 encoding >/dev/null
-EOF
+# sudo -E -H -u "$USERNAME" bash <<'EOF'
+# \. "$NVM_DIR/nvm.sh"
+# nvm install --lts >/dev/null
+# nvm use node
+# echo "Installing global node packages..."
+# npm install -g npm yarn uuid pm2 encoding >/dev/null
+# EOF
