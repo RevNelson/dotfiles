@@ -10,11 +10,35 @@
 ##
 #
 
+read -p "Private IP (this droplet): " PRIVATE_IP
+[[ -z ${PRIVATE_IP} ]] && {
+    echo "Must provide the private IP of this droplet."
+    exit 1
+}
+
+echo "Password for MariaDB backup user: "
+read -s DB_BACKUP_USER_PASS
+[[ -z ${DB_BACKUP_USER_PASS} ]] && {
+    echo "Must provide a password for the MariaDB backup user."
+    exit 1
+}
+
+echo "Password for decrypting database backups: "
+read -s ENCRYPTION_PASS
+[[ -z ${ENCRYPTION_PASS} ]] && {
+    echo "Must provide a password for the database backup encryption."
+    exit 1
+}
+
 # Check for USERNAME and set it if not found
 [[ -z ${USERNAME:-} ]] && USERNAME=${SUDO_USER:-$USER}
 
-HOME_DIRECTORY="/home/${USERNAME}"
-DIRECTORY=$HOME_DIRECTORY/mariadb
+# Check for HOME_DIRECTORY and set it if not found
+[[ -z ${HOME_DIRECTORY:-} ]] && HOME_DIRECTORY=$(getent passwd ${SUDO_USER:-$USER} | cut -d: -f6)
+[[ -z ${DOTBASE:-} ]] && DOTBASE=$HOME_DIRECTORY/.dotfiles
+
+# Check for MariaDB bind address and set it if not found
+[[ -z ${PRIVATE_IP:-} ]] && PRIVATE_IP="0.0.0.0"
 
 #
 ##
@@ -26,50 +50,8 @@ DIRECTORY=$HOME_DIRECTORY/mariadb
 ##
 #
 
-[[ -z ${DOTBASE:-} ]] && DOTBASE=$HOME/.dotfiles
-
 # Source function utils
 . $DOTBASE/functions/utils.sh
-
-# Make sure script is run as root.
-FILENAME=$(basename "$0" .sh)
-run_as_root $FILENAME
-
-usage_info() {
-    BLNK=$(echo "$FILENAME" | sed 's/./ /g')
-    echo "Usage: $FILENAME [{-d} directory] \\"
-    echo -e "\n        e.g. $(magenta $FILENAME -d $DIRECTORY)"
-
-}
-
-usage() {
-    exec 1>2 # Send standard output to standard error
-    usage_info
-    exit 1
-}
-
-help() {
-    usage_info
-    echo
-    echo "  {-d} directory (Default is: $DIRECTORY)"
-    echo "  {-h} help"
-    exit 0
-}
-
-####################
-# Script Variables #
-####################
-
-while getopts 'hk:s:e:c:' flag; do
-    case $flag in
-    h) help ;;
-    d) DIRECTORY="${OPTARG}" ;;
-    *)
-        usage_info
-        exit 1
-        ;;
-    esac
-done
 
 #
 ##
@@ -81,31 +63,89 @@ done
 ##
 #
 
-print_section "Installing MariaDB..."
+echo "Installing MariaDB Client..."
 
-mkdir -p $DIRECTORY
+apt_quiet install wget software-properties-common -y
 
-echo "Creating backup script..."
-read -p "Backup directory: " USERNAME
-[[ -z ${USERNAME} ]] && {
-    echo "Must provide a username for the main user of this droplet with privileges."
-    exit 1
-}
+if ! cmd_exists mysql; then
+    wget -q https://downloads.mariadb.com/MariaDB/mariadb_repo_setup
 
-echo "Password for $USERNAME: "
-read -s USER_PASSWORD
-[[ -z ${USER_PASSWORD} ]] && {
-    echo "Must provide a password for $USERNAME."
-    exit 1
-}
+    if [ -f mariadb_repo_setup ]; then
+        chmod +x mariadb_repo_setup
+        ./mariadb_repo_setup --mariadb-server-version="mariadb-10.11" >/dev/null 2>&1
+        apt_quiet update && apt_quiet install mariadb-server mariadb-backup -y
+        rm mariadb_repo_setup
+    else
+        echo "Error downloading MariaDB repo setup file. Please run mariadb-setup again."
+    fi
 
-BACKUP_DIR=$DIRECTORY/backups/files
-S3_BUCKET_NAME=nelson.tech-db
-S3_DIRECTORY_NAME=backups
-DAYS_TO_KEEP=30
-MYSQL_USER=root
-MYSQL_PASSWORD=DWqzrHmQrYMU366FFmzD
-MYSQL=/usr/bin/mysql
-MYSQLDUMP=/usr/bin/mysqldump
+    ufw allow mysql
 
-echo "$(green MariaDB is now installed.)"
+fi
+
+# Run mysql_secure_installation
+sed -e 's/\s*\([\+0-9a-zA-Z]*\).*/\1/' <<EOF | mysql_secure_installation >/dev/null 2>&1
+      # current root password (emtpy after installation)
+    n # Set root password?
+    y # Remove anonymous users?
+    y # Disallow root login remotely?
+    y # Remove test database and access to it?
+    y # Reload privilege tables now?
+EOF
+
+echo "Adding server config file for SSL..."
+SSL_CONF_FILE="$DOTBASE/scripts/database/mariadb-server.cnf"
+SSL_CONF_DESTINATION="/etc/mysql/mariadb.conf.d/99-server-ssl.cnf"
+
+if [ -f $SSL_CONF_FILE ]; then
+    cp $SSL_CONF_FILE $SSL_CONF_DESTINATION
+fi
+
+# Check that file has been placed
+if [ -f $SSL_CONF_DESTINATION ]; then
+    sed -i "s/bind-address.*/bind-address = ${PRIVATE_IP}/g" $SSL_CONF_DESTINATION
+    echo "MariaDB SSL config placed at $SSL_CONF_DESTINATION"
+fi
+
+#########################################
+# Provision backup user with encryption #
+#########################################
+
+echo "Adding user and encryption for backups..."
+# Add backup user in mysql
+mysql -e "GRANT SELECT, TRIGGER, EVENT, SHOW VIEW ON *.* TO 'mdbbackup'@'localhost' IDENTIFIED BY '${DB_BACKUP_USER_PASS}';"
+mysql -e "FLUSH PRIVILEGES;"
+
+# Create backup.cnf
+cat >/etc/mysql/mariadb.conf.d/backup.cnf <<EOF
+[mysqldump]
+user = mdbbackup
+password = ${DB_BACKUP_USER_PASS}
+EOF
+chmod 600 /etc/mysql/mariadb.conf.d/backup.cnf
+
+DB_BACKUP_KEY="$HOME_DIRECTORY/backup.key"
+if [ ! -f $DB_BACKUP_KEY ]; then
+    if said_yes $PROVISION_DROPLET; then
+        NEW_BACKUP_KEY=yes
+    else
+        echo "Do you want to generate a new encryption key for backups?"
+        read -p "If not, you will need to run $(green mysql-backup-key) after provisioning. [y/n] " NEW_BACKUP_KEY
+    fi
+
+    if said_yes $NEW_BACKUP_KEY; then
+        # Generate and sign encryption certificate
+        openssl genpkey -algorithm RSA -pass pass:$ENCRYPTION_PASS -out $HOME_DIRECTORY/backup.key -pkeyopt rsa_keygen_bits:4096 -aes256 >/dev/null 2>&1
+        . $DOTBASE/scripts/database/mysql-set-backup-key.sh -k $DB_BACKUP_KEY
+    fi
+else
+    . $DOTBASE/scripts/database/mysql-set-backup-key.sh -k $DB_BACKUP_KEY
+fi
+
+##################################
+# Generate SSL certs for MariaDB #
+##################################
+
+. $DOTBASE/scripts/database/server-ssl-generate.sh -f
+
+echo "MariaDB has been installed and configured."
