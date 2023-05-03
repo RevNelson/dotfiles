@@ -8,6 +8,7 @@ path=(
     /opt/local/bin
     /local/java/jdk/bin
     /opt/homebrew/bin
+    $HOME/.nvm
     $HOME/.local/bin
     $HOME/bin
     $HOME/.yarn/bin
