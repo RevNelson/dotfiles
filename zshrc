@@ -210,8 +210,16 @@ bindkey '^Z' ctrl-z-toggle
 # NVM #
 #######
 
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"                   # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion" # This loads nvm bash_completion
+
 if [[ -f $ZSH_DIR/nvm.zsh ]]; then
     source $ZSH_DIR/nvm.zsh
+fi
+
+if cmd_exists nvm; then
+    nvm use node
 fi
 
 ########
@@ -262,9 +270,3 @@ fi
 if [ -f ~/.config/servers.sh ]; then
     . ~/.config/servers.sh
 fi
-
-export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
-
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"                   # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion" # This loads nvm bash_completion
