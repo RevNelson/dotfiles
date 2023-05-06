@@ -21,7 +21,10 @@ alias gaacm='chmod -R +x ~/.dotfiles && git add * && git commit -m '
 alias home='cd ~/'
 
 # Caddy
-alias caddyf='sudo bash ~/.dotfiles/scripts/caddy/format.sh'
+if cmd_exists caddy; then
+    alias caddyf='sudo bash ~/.dotfiles/scripts/caddy/format.sh'
+    alias caddyr='sudo bash ~/.dotfiles/scripts/caddy/reload.sh'
+fi
 
 # Get usertype
 USERTYPE_FILE=$HOME/.config/usertype.sh
