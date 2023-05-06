@@ -111,8 +111,8 @@ EOF
     chown -R "${USERNAME}:${USERNAME}" "${HOME_DIRECTORY}/.ssh"
 
     # Add exception for SSH and then enable UFW firewall
-    ufw allow ${SSH_PORT}/tcp >/dev/null
-    ufw --force enable >/dev/null
+    # ufw allow ${SSH_PORT}/tcp >/dev/null
+    # ufw --force enable >/dev/null
 
     echo "SSH configured."
 else
