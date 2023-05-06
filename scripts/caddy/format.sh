@@ -48,10 +48,7 @@ run_as_root $FILENAME
 #
 
 if cmd_exists caddy; then
-  search_dir=/etc/caddy
-  for entry in "$search_dir"/*; do
-    caddy fmt $entry --overwrite
-  done
+  find /etc/caddy/ -type f -exec caddy fmt {} --overwrite \;
 else
   echo "Caddy is not installed."
 fi
