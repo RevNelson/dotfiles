@@ -1,4 +1,5 @@
 path=(
+    /opt/homebrew/opt/ruby/bin
     /usr/local/bin
     /usr/bin
     /bin
@@ -19,4 +20,6 @@ path=(
     $HOME/Library/Python/3.8/bin
     $HOME/.pyenv/bin
     $HOME/.rover/bin
+    $HOME/coding/flutter/flutter/bin
+    $HOME/.bun/bin
 )

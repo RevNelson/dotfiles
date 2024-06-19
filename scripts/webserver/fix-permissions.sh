@@ -1,5 +1,10 @@
 #!/bin/bash
 
+[[ -z ${DOTBASE:-} ]] && DOTBASE=$HOME/.dotfiles
+
+# Source function utils
+. $HOME/.dotfiles/functions/utils.sh
+
 #
 ##
 ###
@@ -18,10 +23,6 @@ STARTING_PATH=$PWD
 # Check for USERNAME and set it if not found
 [[ -z ${USERNAME:-} ]] && USERNAME=${SUDO_USER:-$USER}
 
-# Check for HOME_DIRECTORY and set it if not found
-[[ -z ${HOME_DIRECTORY:-} ]] && HOME_DIRECTORY=$(getent passwd ${SUDO_USER:-$USER} | cut -d: -f6)
-[[ -z ${DOTBASE:-} ]] && DOTBASE=$HOME_DIRECTORY/.dotfiles
-
 #
 ##
 ###
@@ -31,9 +32,6 @@ STARTING_PATH=$PWD
 ###
 ##
 #
-
-# Source function utils
-. $HOME_DIRECTORY/.dotfiles/functions/utils.sh
 
 # Make sure script is run as root.
 FILENAME=$(basename "$0" .sh)

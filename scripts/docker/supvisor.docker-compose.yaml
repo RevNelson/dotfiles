@@ -1,0 +1,16 @@
+version: "3"
+
+services:
+  supervisor:
+    build: ./supervisor.dockerfile
+    container_name: ${PROJECT_NAME}-supervisor
+    environment:
+      MYSQL_CONTAINER_NAME: ${PROJECT_NAME}-database
+      MYSQL_DATABASE: my-database
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - ./database/scripts/backup.sh:/etc/periodic/daily/backup.sh
+      - ./database/backups:/opt/mysql/backup
+    command: crond
+    restart: always

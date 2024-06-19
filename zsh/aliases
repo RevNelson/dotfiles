@@ -1,3 +1,4 @@
+alias tailscale="/Applications/Tailscale.app/Contents/MacOS/Tailscale"
 alias dc=docker-compose
 alias edit='nano'
 

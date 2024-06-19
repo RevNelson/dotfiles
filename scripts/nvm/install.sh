@@ -45,7 +45,7 @@ print_section 'Installing NVM...'
 echo "Updating apt sources..."
 sudo apt_quiet update
 
-NVM_VERSION="0.39.3"
+NVM_VERSION="0.39.7"
 export NVM_DIR=$HOME_DIRECTORY/.nvm
 NVM_URL=https://raw.githubusercontent.com/nvm-sh/nvm/v${NVM_VERSION}/install.sh
 echo "Installing NVM v$NVM_VERSION..."

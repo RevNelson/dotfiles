@@ -100,7 +100,7 @@ setopt HIST_IGNORE_ALL_DUPS
 # Completions #
 ###############
 
-zinit wait lucid for as'completion' OMZP::docker/_docker
+#zinit wait lucid for as'completion' OMZP::docker/_docker
 
 ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=8"
 #ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=#ff00ff,bg=cyan,bold,underline"
@@ -270,3 +270,20 @@ fi
 if [ -f ~/.config/servers.sh ]; then
     . ~/.config/servers.sh
 fi
+
+# Add RVM to PATH for scripting. Make sure this is the last PATH variable change.
+export PATH="$PATH:$HOME/.rvm/bin"
+
+# pnpm
+export PNPM_HOME="/Users/revnelson/Library/pnpm"
+case ":$PATH:" in
+*":$PNPM_HOME:"*) ;;
+*) export PATH="$PNPM_HOME:$PATH" ;;
+esac
+# pnpm end
+# bun completions
+[ -s "/Users/revnelson/.bun/_bun" ] && source "/Users/revnelson/.bun/_bun"
+
+# bun
+export BUN_INSTALL="$HOME/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"
